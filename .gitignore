@@ -1,3 +1,5 @@
+matcha
+.env
 *.beam
 *.ez
 /build

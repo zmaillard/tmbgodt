@@ -1,0 +1,33 @@
+{> with albums as List(Album)
+
+{> import tmbgodt/album.{type Album}
+{> import wisp
+{> import gleam/int
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hello Bulma!</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+    <script src="https://unpkg.com/htmx.org@1.9.11"></script>
+  </head>
+  <body>
+  <section class="section">
+    <div class="container">
+      <form method="POST" hx-post="/sign" enctype="multipart/form-data">
+      <div class="select is-link">
+  <select name="album">
+          {% for album as Album in albums %}
+          <option id={{int.to_string(album.id)}}>{{album.name}}</option>
+          {% endfor %}
+  </select>
+    <input type="text" name="song" />
+<button type="submit">Add Song</button>
+</form>
+</div>
+    </div>
+  </section>
+  </body>
+</html>
