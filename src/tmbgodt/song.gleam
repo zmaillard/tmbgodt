@@ -1,3 +1,8 @@
+import sqlight
+import gleam/result
+import gleam/dynamic
+import tmbgodt/error.{type AppError}
+
 pub type Song {
   Song(day: Int, name: String, album: Int)
 }
@@ -26,11 +31,12 @@ pub fn insert_song(
     )
     |> result.map_error(fn(error) {
       case error.code, error.message {
-        _, _ -> error.BadRequest //TODO: Add detail
+        _, _ -> error.Database
       }
     }),
   )
 
+  //TODO: Add detail
   let assert [id] = rows
   Ok(id)
 }

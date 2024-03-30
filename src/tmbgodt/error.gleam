@@ -1,4 +1,6 @@
 pub type AppError {
-    NotFound
-    UnprocessableEntity
+  NotFound
+  Database
+  UnprocessableEntity
+  InvalidAlbum
 }

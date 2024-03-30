@@ -30,8 +30,9 @@ pub fn render_builder(albums albums: List(Album)) -> StringBuilder {
   <body>
   <section class=\"section\">
     <div class=\"container\">
+      <form method=\"POST\" hx-post=\"/sign\" enctype=\"multipart/form-data\">
       <div class=\"select is-link\">
-  <select>
+  <select name=\"album\">
           ",
     )
   let builder =
@@ -59,12 +60,10 @@ pub fn render_builder(albums albums: List(Album)) -> StringBuilder {
       builder,
       "
   </select>
+    <input type=\"text\" name=\"song\" />
+<button type=\"submit\">Add Song</button>
+</form>
 </div>
-      <h1 class=\"title\">
-        Hello World
-      </h1>
-      <p class=\"subtitle\">
-      </p>
     </div>
   </section>
   </body>

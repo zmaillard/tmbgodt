@@ -1,5 +1,4 @@
 import tmbgodt/error.{type AppError}
-import gleam/result
 import sqlight
 
 pub type Connection =
