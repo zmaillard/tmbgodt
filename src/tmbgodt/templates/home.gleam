@@ -2,11 +2,12 @@
 
 import gleam/string_builder.{type StringBuilder}
 import gleam/list
+import tmbgodt/models/home.{type Home}
 import tmbgodt/album.{type Album}
 import wisp
 import gleam/int
 
-pub fn render_builder(albums albums: List(Album)) -> StringBuilder {
+pub fn render_builder(home home: Home) -> StringBuilder {
   let builder = string_builder.from_string("")
   let builder =
     string_builder.append(
@@ -30,18 +31,18 @@ pub fn render_builder(albums albums: List(Album)) -> StringBuilder {
   <body>
   <section class=\"section\">
     <div class=\"container\">
-      <form method=\"POST\" hx-post=\"/sign\" enctype=\"multipart/form-data\">
+      <form method=\"POST\" hx-post=\"/song\" enctype=\"multipart/form-data\">
       <div class=\"select is-link\">
   <select name=\"album\">
           ",
     )
   let builder =
-    list.fold(albums, builder, fn(builder, album: Album) {
+    list.fold(home.albums, builder, fn(builder, album: Album) {
       let builder =
         string_builder.append(
           builder,
           "
-          <option id=",
+          <option value=",
         )
       let builder = string_builder.append(builder, int.to_string(album.id))
       let builder = string_builder.append(builder, ">")
@@ -60,8 +61,8 @@ pub fn render_builder(albums albums: List(Album)) -> StringBuilder {
       builder,
       "
   </select>
-    <input type=\"text\" name=\"song\" />
-<button type=\"submit\">Add Song</button>
+    <input class=\"control\" type=\"text\" name=\"song\" />
+<button class=\"button\" type=\"submit\">Add Song</button>
 </form>
 </div>
     </div>
@@ -74,6 +75,6 @@ pub fn render_builder(albums albums: List(Album)) -> StringBuilder {
   builder
 }
 
-pub fn render(albums albums: List(Album)) -> String {
-  string_builder.to_string(render_builder(albums: albums))
+pub fn render(home home: Home) -> String {
+  string_builder.to_string(render_builder(home: home))
 }
