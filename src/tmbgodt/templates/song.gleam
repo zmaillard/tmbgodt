@@ -2,9 +2,10 @@
 
 import gleam/string_builder.{type StringBuilder}
 import gleam/list
-import tmbgodt/song.{type Song}
-import wisp
 import gleam/int
+import tmbgodt/song.{type Song}
+import tmbgodt/day
+import wisp
 
 pub fn render_builder(songs songs: List(Song)) -> StringBuilder {
   let builder = string_builder.from_string("")
@@ -38,7 +39,8 @@ pub fn render_builder(songs songs: List(Song)) -> StringBuilder {
     <tr>
         <td>",
         )
-      let builder = string_builder.append(builder, int.to_string(song.day))
+      let builder =
+        string_builder.append(builder, day.convert_day_to_date(song.day))
       let builder =
         string_builder.append(
           builder,

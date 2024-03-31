@@ -2,6 +2,7 @@
 
 import gleam/string_builder.{type StringBuilder}
 import gleam/list
+import tmbgodt/templates/song as song_template
 import tmbgodt/models/home.{type Home}
 import tmbgodt/album.{type Album}
 import wisp
@@ -29,9 +30,26 @@ pub fn render_builder(home home: Home) -> StringBuilder {
     <script src=\"https://unpkg.com/htmx.org@1.9.11\"></script>
   </head>
   <body>
+  <section class=\"section\" id=\"songs\">
+  ",
+    )
+  let builder =
+    string_builder.append_builder(
+      builder,
+      song_template.render_builder(home.songs),
+    )
+  let builder =
+    string_builder.append(
+      builder,
+      "
+  </section>
   <section class=\"section\">
     <div class=\"container\">
-      <form method=\"POST\" hx-post=\"/song\" enctype=\"multipart/form-data\">
+      <form 
+      method=\"POST\" 
+      hx-post=\"/song\" 
+      hx-target=\"#songs\"
+      enctype=\"multipart/form-data\">
       <div class=\"select is-link\">
   <select name=\"album\">
           ",

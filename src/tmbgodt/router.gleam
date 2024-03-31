@@ -20,6 +20,7 @@ pub fn handle_request(req: Request, ctx: Context) {
   case wisp.path_segments(req) {
     [] -> home(ctx)
     ["song"] -> song(req, ctx)
+    ["album"] -> album(req, ctx)
     _ -> wisp.not_found()
   }
 }
@@ -45,6 +46,22 @@ fn create_song(request: Request, ctx: Context) -> Response {
 
   song_template.render_builder(songs)
   |> wisp.html_response(201)
+}
+
+fn album(req: Request, ctx: Context) -> Response {
+  case req.method {
+    http.Post -> create_album(req, ctx)
+    http.Get -> get_album(req, ctx)
+    _ -> wisp.method_not_allowed([http.Post, http.Get])
+  }
+}
+
+fn create_album(req: Request, ctx: Context) -> Response {
+  wisp.ok()
+}
+
+fn get_album(req: Request, ctx: Context) -> Response {
+  wisp.ok()
 }
 
 fn song(req: Request, ctx: Context) -> Response {

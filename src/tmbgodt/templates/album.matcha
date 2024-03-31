@@ -1,5 +1,3 @@
-{> with home as Home
-
 {> import tmbgodt/templates/song as song_template
 {> import tmbgodt/models/home.{type Home}
 {> import tmbgodt/album.{type Album}

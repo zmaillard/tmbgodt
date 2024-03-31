@@ -1,8 +1,9 @@
 {> with songs as List(Song)
 
-{> import tmbgodt/song.{type Song}
-{> import wisp
 {> import gleam/int
+{> import tmbgodt/song.{type Song}
+{> import tmbgodt/day
+{> import wisp
 
 <table class="table">
     <thead>
@@ -15,7 +16,7 @@
     </thead>
     {% for song as Song in songs %}
     <tr>
-        <td>{{int.to_string(song.day)}}</td>
+        <td>{{day.convert_day_to_date(song.day)}}</td>
         <td>{{song.name}}</td>
         <td>{{song.album_name}}</td>
         <td>{{int.to_string(song.year)}}</td>
