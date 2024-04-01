@@ -1,39 +1,20 @@
-{> import tmbgodt/templates/song as song_template
-{> import tmbgodt/models/home.{type Home}
+{> with albums as List(Album)
+
 {> import tmbgodt/album.{type Album}
 {> import gleam/int
 
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Hello Bulma!</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
-    <script src="https://unpkg.com/htmx.org@1.9.11"></script>
-  </head>
-  <body>
-  <section class="section" id="songs">
-  {[ song_template.render_builder(home.songs) ]}
-  </section>
-  <section class="section">
-    <div class="container">
-      <form 
-      method="POST" 
-      hx-post="/song" 
-      hx-target="#songs"
-      enctype="multipart/form-data">
-      <div class="select is-link">
-  <select name="album">
-          {% for album as Album in home.albums %}
-          <option value={{int.to_string(album.id)}}>{{album.name}}</option>
-          {% endfor %}
-  </select>
-    <input class="control" type="text" name="song" />
-<button class="button" type="submit">Add Song</button>
-</form>
-</div>
-    </div>
-  </section>
-  </body>
-</html>
+<table class="table">
+    <thead>
+        <tr>
+        <th>Album</th>
+        <th>Is Compilation?</th>
+        <th>Year</th>
+        </tr>
+    </thead>
+    {% for album as Album in albums %}
+    <tr>
+        <td>{{album.name}}</td>
+        <td>{{int.to_string(album.year)}}</td>
+    </tr>
+    {% endfor %}
+</table>

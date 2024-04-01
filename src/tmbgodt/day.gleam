@@ -1,11 +1,13 @@
+import gleam/int
 import birl
 import birl/duration
 
 const jan_one_2024 = birl.Day(2024, 1, 1)
 
 pub fn convert_day_to_date(day: Int) -> String {
-  birl.add(get_first_day_of_2024(), duration.days(day - 1))
-  |> birl.to_naive_date_string
+  //let _ = birl.add(get_first_day_of_2024(), duration.days(day - 1))
+  //|> birl.to_naive_date_string
+  int.to_string(day)
 }
 
 fn get_first_day_of_2024() -> birl.Time {

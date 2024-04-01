@@ -5,7 +5,6 @@ import gleam/list
 import tmbgodt/templates/song as song_template
 import tmbgodt/models/home.{type Home}
 import tmbgodt/album.{type Album}
-import wisp
 import gleam/int
 
 pub fn render_builder(home home: Home) -> StringBuilder {
