@@ -3,6 +3,7 @@
 
 packages = [
   { name = "birl", version = "1.6.0", build_tools = ["gleam"], requirements = ["gleam_stdlib", "ranger"], otp_app = "birl", source = "hex", outer_checksum = "0757CFE97DA52F19BC3262AC3DD284D9DAD2718D4C1830888DE483FB147477D4" },
+  { name = "dot_env", version = "0.3.0", build_tools = ["gleam"], requirements = ["gleam_stdlib", "simplifile"], otp_app = "dot_env", source = "hex", outer_checksum = "FA7DC31F86FD2F64AEBD4868F3F357F93E1147946F5631CBAEBA29EAC0A2BBB3" },
   { name = "esqlite", version = "0.8.6", build_tools = ["rebar3"], requirements = [], otp_app = "esqlite", source = "hex", outer_checksum = "607E45F4DA42601D8F530979417F57A4CD629AB49085891849302057E68EA188" },
   { name = "exception", version = "2.0.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "exception", source = "hex", outer_checksum = "F5580D584F16A20B7FCDCABF9E9BE9A2C1F6AC4F9176FA6DD0B63E3B20D450AA" },
   { name = "filepath", version = "1.0.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "filepath", source = "hex", outer_checksum = "EFB6FF65C98B2A16378ABC3EE2B14124168C0CE5201553DE652E2644DCFDB594" },
@@ -25,7 +26,8 @@ packages = [
 ]
 
 [requirements]
-birl = { version = "~> 1.6"}
+birl = { version = "~> 1.6" }
+dot_env = { version = "~> 0.3"}
 gleam_erlang = { version = "~> 0.25" }
 gleam_http = { version = "~> 3.6" }
 gleam_stdlib = { version = "~> 0.34 or ~> 1.0" }

@@ -1,7 +1,7 @@
-{> with albums as List(Album)
+{> with model as AlbumEdit
 
 {> import tmbgodt/templates/album as album_template
-{> import tmbgodt/album.{type Album}
+{> import tmbgodt/models/albumedit.{type AlbumEdit}
 
 <!DOCTYPE html>
 <html>
@@ -14,7 +14,7 @@
   </head>
   <body>
   <section class="section" id="albums">
-  {[ album_template.render_builder(albums) ]}
+  {[ album_template.render_builder(model.albums) ]}
   </section>
   <section class="section">
     <div class="container">

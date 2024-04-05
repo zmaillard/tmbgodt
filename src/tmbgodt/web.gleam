@@ -1,11 +1,12 @@
 import gleam/list
 import gleam/result
 import tmbgodt/database
+import tmbgodt/models/auth.{type Auth}
 import tmbgodt/error.{type AppError}
 import wisp.{type Response}
 
 pub type Context {
-  Context(db: database.Connection)
+  Context(db: database.Connection, auth: Auth)
 }
 
 pub fn key_find(list: List(#(k, v)), key: k) -> Result(v, AppError) {

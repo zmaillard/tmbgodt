@@ -1,0 +1,26 @@
+# fly.toml app configuration file generated for tmbgodt on 2024-04-05T15:44:46-06:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'tmbgodt'
+primary_region = 'sea'
+
+[build]
+
+[mounts]
+  source = 'litefs'
+  destination = '/var/lib/litefs'
+
+[http_service]
+  internal_port = 3001
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[vm]]
+  memory = '256mb'
+  cpu_kind = 'shared'
+  cpus = 1

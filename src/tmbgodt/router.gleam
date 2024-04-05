@@ -1,31 +1,84 @@
 import gleam/http
-import gleam/io
+import gleam/list
 import gleam/int
+import gleam/io
+import gleam/erlang/os
 import tmbgodt/web.{type Context}
 import tmbgodt/album
 import tmbgodt/error
 import tmbgodt/song.{Song}
 import tmbgodt/models/home.{Home}
+import tmbgodt/models/albumedit.{AlbumEdit}
 import wisp.{type Request, type Response}
 import tmbgodt/templates/home as home_template
 import tmbgodt/templates/album as album_template
 import tmbgodt/templates/albums as albums_template
 import tmbgodt/templates/song as song_template
+import tmbgodt/models/auth
 import gleam/result
+
+const cookie_name = "tmbgid"
+
+const state_cookie = "state"
 
 pub fn handle_request(req: Request, ctx: Context) {
   let req = wisp.method_override(req)
   use <- wisp.log_request(req)
   use <- wisp.rescue_crashes
   use req <- wisp.handle_head(req)
-  //use ctx <- <- web.authenticate(req,ctx)
 
   case wisp.path_segments(req) {
     [] -> home(ctx)
+    ["login"] -> login(req, ctx)
+    ["callback"] -> callback(req)
     ["song"] -> song(req, ctx)
     ["album"] -> album(req, ctx)
     _ -> wisp.not_found()
   }
+}
+
+fn callback(req: Request) -> Response {
+  let vals = wisp.get_query(req)
+
+  let result = {
+    let code = list.key_find(vals, "code")
+    let state = list.key_find(vals, "state")
+    let orig_state = wisp.get_cookie(req, state_cookie, wisp.Signed)
+    let user_id = os.get_env("USER_ID")
+
+    io.debug(code)
+    io.debug(state)
+    io.debug(orig_state)
+    io.debug(user_id)
+    case code, state, orig_state, user_id {
+      Ok(_), Ok(state), Ok(orig_state), Ok(user_id) if state == orig_state ->
+        Ok(user_id)
+      _, _, _, _ -> Error("missing code or state")
+    }
+  }
+
+  case result {
+    Ok(uid) ->
+      wisp.redirect("/")
+      |> wisp.set_cookie(req, cookie_name, uid, wisp.Signed, 60 * 60 * 24)
+    Error(_) ->
+      wisp.redirect("/")
+      |> wisp.set_cookie(req, cookie_name, "", wisp.Signed, 0)
+  }
+}
+
+fn login(req: Request, ctx: Context) -> Response {
+  let random_state = "abcd"
+
+  let resp = wisp.redirect(auth.build_auth_url(random_state, ctx.auth))
+  wisp.set_cookie(
+    resp,
+    req,
+    state_cookie,
+    random_state,
+    wisp.PlainText,
+    60 * 60,
+  )
 }
 
 fn create_song(request: Request, ctx: Context) -> Response {
@@ -70,17 +123,18 @@ fn create_album(req: Request, ctx: Context) -> Response {
       |> result.replace_error(error.InvalidAlbum),
     )
 
-    let is_comp_raw = web.key_find(params.values, "is_compilation")
-    let is_comp = case is_comp_raw {
-      Ok("on") -> True
-      _ -> False
-    }
+    use album_type <- result.try(web.key_find(params.values, "album_type"))
+    use album_type_id <- result.try(
+      int.parse(album_type)
+      |> result.replace_error(error.InvalidAlbum),
+    )
 
-    io.debug(album_name)
-    io.debug(year)
-    io.debug(is_comp)
-
-    use id <- result.try(album.insert_album(album_name, year, is_comp, ctx.db))
+    use id <- result.try(album.insert_album(
+      album_name,
+      year,
+      album_type_id,
+      ctx.db,
+    ))
 
     Ok(id)
   }
@@ -94,8 +148,9 @@ fn create_album(req: Request, ctx: Context) -> Response {
 
 fn get_album(ctx: Context) -> Response {
   let albums = album.all_albums(ctx.db)
+  let album_types = album.all_album_types(ctx.db)
 
-  albums_template.render_builder(albums)
+  albums_template.render_builder(AlbumEdit(albums, album_types))
   |> wisp.html_response(200)
 }
 

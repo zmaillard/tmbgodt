@@ -1,0 +1,9 @@
+# flyctl launch added from .gitignore
+**/matcha
+**/.env
+**/*.beam
+**/*.ez
+build
+**/erl_crash.dump
+**/*.sqlite
+fly.toml

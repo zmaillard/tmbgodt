@@ -20,6 +20,7 @@ gleam_erlang = "~> 0.25"
 sqlight = "~> 0.9"
 gleam_http = "~> 3.6"
 birl = "~> 1.6"
+dot_env = "~> 0.3"
 
 [dev-dependencies]
 gleeunit = "~> 1.0"

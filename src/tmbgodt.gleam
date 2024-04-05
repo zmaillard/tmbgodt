@@ -7,11 +7,12 @@ import mist
 import tmbgodt/database
 import tmbgodt/router
 import tmbgodt/web.{Context}
+import tmbgodt/models/auth
 
 fn database_name() {
   case os.get_env("DATABASE_PATH") {
     Ok(path) -> path
-    Error(Nil) -> "tmbg.sqlite"
+    Error(Nil) -> "/litefs/tmbg.sqlite"
   }
 }
 
@@ -21,10 +22,17 @@ pub fn main() {
   let port = load_port()
   let secret_key = load_secret_key()
 
+  let assert Ok(domain) = os.get_env("AUTH0_DOMAIN")
+  let assert Ok(client_id) = os.get_env("AUTH0_CLIENTID")
+  let assert Ok(callback) = os.get_env("AUTH0_CALLBACK")
+  let assert Ok(audience) = os.get_env("AUTH0_AUDIENCE")
+
+  let auth = auth.Auth(domain, client_id, callback, audience)
+
   let handle_request = fn(req) {
     let assert Ok(_) = database.with_connection(database_name(), database.empty)
     use db <- database.with_connection(database_name())
-    let ctx = Context(db: db)
+    let ctx = Context(db: db, auth: auth)
     router.handle_request(req, ctx)
   }
 
