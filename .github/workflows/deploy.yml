@@ -6,7 +6,7 @@ on:
     branches:
       - main
 jobs:
-  version:
+  deploy:
     runs-on: ubuntu-latest
     permissions: write-all
     steps:
@@ -20,6 +20,8 @@ jobs:
           node-version: '^v20.11.0'
 
       - uses: moonrepo/setup-rust@v1
+
+      - uses: extractions/setup-just@v2
 
       - run: npm install
 
