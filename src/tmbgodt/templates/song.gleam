@@ -19,15 +19,19 @@ pub fn render_builder(songs songs: List(Song)) -> StringBuilder {
     string_builder.append(
       builder,
       "
-<table class=\"table-auto\">
-    <thead>
+
+
+<div class=\"relative overflow-x-auto\">
+    <table class=\"w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400\">
+        <thead class=\"text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400\">
         <tr>
-        <th>Day</th>
-        <th>Song</th>
-        <th>Album</th>
-        <th>Year</th>
+          <th scope=\"col\" class=\"px-6 py-3\">Day</th>
+          <th scope=\"col\" class=\"px-6 py-3\">Song</th>
+          <th scope=\"col\" class=\"px-6 py-3\">Album</th>
+          <th scope=\"col\" class=\"px-6 py-3\">Year</th>
         </tr>
     </thead>
+    <tbody>
     ",
     )
   let builder =
@@ -36,30 +40,30 @@ pub fn render_builder(songs songs: List(Song)) -> StringBuilder {
         string_builder.append(
           builder,
           "
-    <tr>
-        <td>",
+     <tr class=\"bg-white border-b dark:bg-gray-800 dark:border-gray-700\">
+        <th scope=\"row\" class=\"px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white\">",
         )
       let builder =
         string_builder.append(builder, day.convert_day_to_date(song.day))
       let builder =
         string_builder.append(
           builder,
-          "</td>
-        <td>",
+          "</th>
+        <td class=\"px-6 py-4\">",
         )
       let builder = string_builder.append(builder, song.name)
       let builder =
         string_builder.append(
           builder,
           "</td>
-        <td>",
+        <td class=\"px-6 py-4\">",
         )
       let builder = string_builder.append(builder, song.album_name)
       let builder =
         string_builder.append(
           builder,
           "</td>
-        <td>",
+        <td class=\"px-6 py-4\">",
         )
       let builder = string_builder.append(builder, int.to_string(song.year))
       let builder =
@@ -76,7 +80,9 @@ pub fn render_builder(songs songs: List(Song)) -> StringBuilder {
     string_builder.append(
       builder,
       "
-</table>",
+    </tbody>
+</table>
+</div>",
     )
 
   builder

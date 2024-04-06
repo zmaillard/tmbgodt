@@ -1,0 +1,36 @@
+name: Deploy TMBG Song Of The Day
+on:
+  push:
+    paths-ignore:
+      - 'README.md'
+    branches:
+      - main
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    permissions: write-all
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
+          submodules: true
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '^v20.11.0'
+
+      - uses: moonrepo/setup-rust@v1
+
+      - run: npm install
+
+      - run: just tailwind
+
+      - run: just matcha
+
+      - run: just template
+
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - run: flyctl deploy -c fly.toml --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
