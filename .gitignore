@@ -5,3 +5,4 @@ matcha
 /build
 erl_crash.dump
 *.sqlite
+node_modules/
