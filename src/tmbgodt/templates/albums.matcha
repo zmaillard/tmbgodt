@@ -16,6 +16,7 @@
   <section class="section" id="albums">
   {[ album_template.render_builder(model.albums) ]}
   </section>
+  {% if model.is_authenticated %}
   <section class="section">
     <div class="container">
       <form 
@@ -38,5 +39,7 @@
 </div>
     </div>
   </section>
+  {% else %}
+  {% endif %}
   </body>
 </html>

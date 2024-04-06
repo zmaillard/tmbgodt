@@ -1,7 +1,6 @@
 import gleam/http
 import gleam/list
 import gleam/int
-import gleam/io
 import gleam/erlang/os
 import tmbgodt/web.{type Context}
 import tmbgodt/album
@@ -28,7 +27,7 @@ pub fn handle_request(req: Request, ctx: Context) {
   use req <- wisp.handle_head(req)
 
   case wisp.path_segments(req) {
-    [] -> home(ctx)
+    [] -> home(req, ctx)
     ["login"] -> login(req, ctx)
     ["callback"] -> callback(req)
     ["song"] -> song(req, ctx)
@@ -46,10 +45,6 @@ fn callback(req: Request) -> Response {
     let orig_state = wisp.get_cookie(req, state_cookie, wisp.Signed)
     let user_id = os.get_env("USER_ID")
 
-    io.debug(code)
-    io.debug(state)
-    io.debug(orig_state)
-    io.debug(user_id)
     case code, state, orig_state, user_id {
       Ok(_), Ok(state), Ok(orig_state), Ok(user_id) if state == orig_state ->
         Ok(user_id)
@@ -71,17 +66,11 @@ fn login(req: Request, ctx: Context) -> Response {
   let random_state = "abcd"
 
   let resp = wisp.redirect(auth.build_auth_url(random_state, ctx.auth))
-  wisp.set_cookie(
-    resp,
-    req,
-    state_cookie,
-    random_state,
-    wisp.PlainText,
-    60 * 60,
-  )
+  wisp.set_cookie(resp, req, state_cookie, random_state, wisp.Signed, 60 * 60)
 }
 
 fn create_song(request: Request, ctx: Context) -> Response {
+  use <- web.authentication_middleware(request)
   use params <- wisp.require_form(request)
 
   let res = {
@@ -107,12 +96,13 @@ fn create_song(request: Request, ctx: Context) -> Response {
 fn album(req: Request, ctx: Context) -> Response {
   case req.method {
     http.Post -> create_album(req, ctx)
-    http.Get -> get_album(ctx)
+    http.Get -> get_album(req, ctx)
     _ -> wisp.method_not_allowed([http.Post, http.Get])
   }
 }
 
 fn create_album(req: Request, ctx: Context) -> Response {
+  use <- web.authentication_middleware(req)
   use params <- wisp.require_form(req)
 
   let res = {
@@ -146,11 +136,12 @@ fn create_album(req: Request, ctx: Context) -> Response {
   |> wisp.html_response(201)
 }
 
-fn get_album(ctx: Context) -> Response {
+fn get_album(req: Request, ctx: Context) -> Response {
   let albums = album.all_albums(ctx.db)
   let album_types = album.all_album_types(ctx.db)
+  let is_auth = web.is_authenticated(req)
 
-  albums_template.render_builder(AlbumEdit(albums, album_types))
+  albums_template.render_builder(AlbumEdit(albums, album_types, is_auth))
   |> wisp.html_response(200)
 }
 
@@ -161,11 +152,12 @@ fn song(req: Request, ctx: Context) -> Response {
   }
 }
 
-fn home(ctx: Context) -> Response {
+fn home(req: Request, ctx: Context) -> Response {
   let albums = album.all_albums(ctx.db)
   let songs = song.all_songs(ctx.db)
+  let is_auth = web.is_authenticated(req)
 
-  let home = Home(songs, albums)
+  let home = Home(songs, albums, is_auth)
 
   home_template.render_builder(home)
   |> wisp.html_response(200)

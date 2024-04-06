@@ -18,6 +18,7 @@
   <section class="section" id="songs">
   {[ song_template.render_builder(home.songs) ]}
   </section>
+  {% if home.is_authenticated %}
   <section class="section">
     <div class="container">
       <form 
@@ -37,5 +38,7 @@
 </div>
     </div>
   </section>
+  {% else %}
+  {% endif %}
   </body>
 </html>

@@ -2,17 +2,23 @@
 
 import gleam/string_builder.{type StringBuilder}
 import gleam/list
-
 import gleam/int
 import tmbgodt/song.{type Song}
 import tmbgodt/day
 import wisp
 
 pub fn render_builder(songs songs: List(Song)) -> StringBuilder {
-    let builder = string_builder.from_string("")
-    let builder = string_builder.append(builder, "
-")
-    let builder = string_builder.append(builder, "
+  let builder = string_builder.from_string("")
+  let builder =
+    string_builder.append(
+      builder,
+      "
+",
+    )
+  let builder =
+    string_builder.append(
+      builder,
+      "
 <table class=\"table\">
     <thead>
         <tr>
@@ -22,34 +28,60 @@ pub fn render_builder(songs songs: List(Song)) -> StringBuilder {
         <th>Year</th>
         </tr>
     </thead>
-    ")
-    let builder = list.fold(songs, builder, fn(builder, song: Song) {
-            let builder = string_builder.append(builder, "
+    ",
+    )
+  let builder =
+    list.fold(songs, builder, fn(builder, song: Song) {
+      let builder =
+        string_builder.append(
+          builder,
+          "
     <tr>
-        <td>")
-    let builder = string_builder.append(builder, day.convert_day_to_date(song.day))
-    let builder = string_builder.append(builder, "</td>
-        <td>")
-    let builder = string_builder.append(builder, song.name)
-    let builder = string_builder.append(builder, "</td>
-        <td>")
-    let builder = string_builder.append(builder, song.album_name)
-    let builder = string_builder.append(builder, "</td>
-        <td>")
-    let builder = string_builder.append(builder, int.to_string(song.year))
-    let builder = string_builder.append(builder, "</td>
+        <td>",
+        )
+      let builder =
+        string_builder.append(builder, day.convert_day_to_date(song.day))
+      let builder =
+        string_builder.append(
+          builder,
+          "</td>
+        <td>",
+        )
+      let builder = string_builder.append(builder, song.name)
+      let builder =
+        string_builder.append(
+          builder,
+          "</td>
+        <td>",
+        )
+      let builder = string_builder.append(builder, song.album_name)
+      let builder =
+        string_builder.append(
+          builder,
+          "</td>
+        <td>",
+        )
+      let builder = string_builder.append(builder, int.to_string(song.year))
+      let builder =
+        string_builder.append(
+          builder,
+          "</td>
     </tr>
-    ")
+    ",
+        )
 
-        builder
-})
-    let builder = string_builder.append(builder, "
-</table>")
+      builder
+    })
+  let builder =
+    string_builder.append(
+      builder,
+      "
+</table>",
+    )
 
-    builder
+  builder
 }
 
 pub fn render(songs songs: List(Song)) -> String {
-    string_builder.to_string(render_builder(songs: songs))
+  string_builder.to_string(render_builder(songs: songs))
 }
-
