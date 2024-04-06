@@ -19,7 +19,7 @@ pub fn render_builder(songs songs: List(Song)) -> StringBuilder {
     string_builder.append(
       builder,
       "
-<table class=\"table\">
+<table class=\"table-auto\">
     <thead>
         <tr>
         <th>Day</th>

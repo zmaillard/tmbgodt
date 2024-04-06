@@ -1,0 +1,14 @@
+{
+  "name": "tmbgodt",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "tailwind": "npx tailwindcss -i ./priv/static/input.css -o ./priv/static/index.css --jit --watch"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.19",
+    "flowbite": "^2.3.0",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.3"
+  }
+}

@@ -5,7 +5,7 @@ import gleam/erlang/os
 import tmbgodt/web.{type Context}
 import tmbgodt/album
 import tmbgodt/error
-import tmbgodt/song.{Song}
+import tmbgodt/song
 import tmbgodt/models/home.{Home}
 import tmbgodt/models/albumedit.{AlbumEdit}
 import wisp.{type Request, type Response}
@@ -15,6 +15,9 @@ import tmbgodt/templates/albums as albums_template
 import tmbgodt/templates/song as song_template
 import tmbgodt/models/auth
 import gleam/result
+import prng/random
+import prng/seed
+import birl
 
 const cookie_name = "tmbgid"
 
@@ -25,6 +28,7 @@ pub fn handle_request(req: Request, ctx: Context) {
   use <- wisp.log_request(req)
   use <- wisp.rescue_crashes
   use req <- wisp.handle_head(req)
+  use <- wisp.serve_static(req, under: "/static", from: ctx.static_directory)
 
   case wisp.path_segments(req) {
     [] -> home(req, ctx)
@@ -63,7 +67,11 @@ fn callback(req: Request) -> Response {
 }
 
 fn login(req: Request, ctx: Context) -> Response {
-  let random_state = "abcd"
+  let ticks =
+    birl.now()
+    |> birl.to_unix
+  let string_gen = random.fixed_size_string(32)
+  let #(random_state, _) = random.step(string_gen, seed.new(ticks))
 
   let resp = wisp.redirect(auth.build_auth_url(random_state, ctx.auth))
   wisp.set_cookie(resp, req, state_cookie, random_state, wisp.Signed, 60 * 60)

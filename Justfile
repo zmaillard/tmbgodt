@@ -6,3 +6,6 @@ run:
 
 template:
   matcha && gleam format .
+
+matcha:
+  cargo install --path matcha

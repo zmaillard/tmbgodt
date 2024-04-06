@@ -3,17 +3,18 @@
 {> import tmbgodt/album.{type Album}
 {> import gleam/int
 
-<table class="table">
+<table class="table-auto">
     <thead>
         <tr>
         <th>Album</th>
-        <th>Is Compilation?</th>
+        <th>Type</th>
         <th>Year</th>
         </tr>
     </thead>
     {% for album as Album in albums %}
     <tr>
         <td>{{album.name}}</td>
+        <td>{{album.album_type}}</td>
         <td>{{int.to_string(album.year)}}</td>
     </tr>
     {% endfor %}

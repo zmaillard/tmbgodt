@@ -9,16 +9,26 @@ import gleam/erlang/os
 const cookie_name = "tmbgid"
 
 pub type Context {
-  Context(db: database.Connection, auth: Auth)
+  Context(db: database.Connection, auth: Auth, static_directory: String)
 }
 
 pub fn is_authenticated(req: wisp.Request) -> Bool {
-  let user_cookie = wisp.get_cookie(req, cookie_name, wisp.Signed)
-  let user_id = os.get_env("USER_ID")
+  let is_debug = case os.get_env("DEBUG") {
+    Ok("true") -> True
+    _ -> False
+  }
 
-  case user_cookie, user_id {
-    Ok(user_cookie), Ok(user_id) if user_cookie == user_id -> True
-    _, _ -> False
+  case is_debug {
+    True -> True
+    False -> {
+      let user_cookie = wisp.get_cookie(req, cookie_name, wisp.Signed)
+      let user_id = os.get_env("USER_ID")
+
+      case user_cookie, user_id {
+        Ok(user_cookie), Ok(user_id) if user_cookie == user_id -> True
+        _, _ -> False
+      }
+    }
   }
 }
 

@@ -1,5 +1,5 @@
 pub type Auth {
-  Auth(domain: String, client_id: String, callback: String, audience: String)
+  Auth(domain: String, client_id: String, callback: String)
 }
 
 pub fn build_auth_url(state: String, auth: Auth) -> String {
@@ -11,6 +11,4 @@ pub fn build_auth_url(state: String, auth: Auth) -> String {
   <> auth.callback
   <> "&state="
   <> state
-  //  <> "&audience="
-  //  <> auth.audience
 }

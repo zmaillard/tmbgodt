@@ -5,7 +5,7 @@
 {> import tmbgodt/day
 {> import wisp
 
-<table class="table">
+<table class="table-auto">
     <thead>
         <tr>
         <th>Day</th>

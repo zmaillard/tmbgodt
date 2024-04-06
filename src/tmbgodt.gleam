@@ -25,14 +25,13 @@ pub fn main() {
   let assert Ok(domain) = os.get_env("AUTH0_DOMAIN")
   let assert Ok(client_id) = os.get_env("AUTH0_CLIENTID")
   let assert Ok(callback) = os.get_env("AUTH0_CALLBACK")
-  let assert Ok(audience) = os.get_env("AUTH0_AUDIENCE")
 
-  let auth = auth.Auth(domain, client_id, callback, audience)
+  let auth = auth.Auth(domain, client_id, callback)
 
   let handle_request = fn(req) {
     let assert Ok(_) = database.with_connection(database_name(), database.empty)
     use db <- database.with_connection(database_name())
-    let ctx = Context(db: db, auth: auth)
+    let ctx = Context(db: db, auth: auth, static_directory: static_directory())
     router.handle_request(req, ctx)
   }
 
@@ -54,4 +53,10 @@ fn load_port() -> Int {
 fn load_secret_key() -> String {
   os.get_env("SECRET_KEY")
   |> result.unwrap("2B08C3E458998CEF6088F84C036D85B95F6982C282F1B7")
+}
+
+fn static_directory() -> String {
+  let assert Ok(priv_directory) = wisp.priv_directory("tmbgodt")
+
+  priv_directory <> "/static"
 }

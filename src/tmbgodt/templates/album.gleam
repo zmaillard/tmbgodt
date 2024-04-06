@@ -17,11 +17,11 @@ pub fn render_builder(albums albums: List(Album)) -> StringBuilder {
     string_builder.append(
       builder,
       "
-<table class=\"table\">
+<table class=\"table-auto\">
     <thead>
         <tr>
         <th>Album</th>
-        <th>Is Compilation?</th>
+        <th>Type</th>
         <th>Year</th>
         </tr>
     </thead>
@@ -37,6 +37,13 @@ pub fn render_builder(albums albums: List(Album)) -> StringBuilder {
         <td>",
         )
       let builder = string_builder.append(builder, album.name)
+      let builder =
+        string_builder.append(
+          builder,
+          "</td>
+        <td>",
+        )
+      let builder = string_builder.append(builder, album.album_type)
       let builder =
         string_builder.append(
           builder,
