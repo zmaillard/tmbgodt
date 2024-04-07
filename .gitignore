@@ -6,3 +6,4 @@ matcha_1
 erl_crash.dump
 *.sqlite
 node_modules/
+priv/static/index.css

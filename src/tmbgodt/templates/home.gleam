@@ -42,6 +42,7 @@ pub fn render_builder(home home: Home) -> StringBuilder {
     </div>
 </section>
 
+<div id=\"songs\">
 ",
     )
   let builder =
@@ -53,6 +54,7 @@ pub fn render_builder(home home: Home) -> StringBuilder {
     string_builder.append(
       builder,
       "
+</div>
   ",
     )
   let builder = case home.is_authenticated {

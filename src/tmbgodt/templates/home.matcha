@@ -28,7 +28,9 @@
     </div>
 </section>
 
+<div id="songs">
 {[ song_template.render_builder(home.songs) ]}
+</div>
   {% if home.is_authenticated %}
   <section class="section">
     <div class="container">
