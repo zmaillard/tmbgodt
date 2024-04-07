@@ -1,29 +1,20 @@
 # tmbgodt
 
-[![Package Version](https://img.shields.io/hexpm/v/tmbgodt)](https://hex.pm/packages/tmbgodt)
-[![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/tmbgodt/)
+An application that is used to learn Gleam.  Based off of the https://github.com/gleam-wisp/wisp project.
 
-```sh
-gleam add tmbgodt
-```
-```gleam
-import tmbgodt
 
-pub fn main() {
-  // TODO: An example of the project in use
-}
-```
+## Infrastructure
+- FlyIO
+- LiteFS / Sqlite Database
+- GitHub Actions For Deployment
+- Auth0 For Identity Management
 
-Further documentation can be found at <https://hexdocs.pm/tmbgodt>.
-
-## Development
-
-```sh
-gleam run   # Run the project
-gleam test  # Run the tests
-gleam shell # Run an Erlang shell
-```
-
+## Enviornment Variables (Defined As Secrets)
+- AUTH0_CALLBACK - Url to redirect after login
+- AUTH0_CLIENTID - Client id for Auth0 Application
+- AUTH0_DOMAIN - Url for Auth0 Tenant
+- SECRET_KEY - Secret key used by Wisp
+- USER_ID - User id used for authentication
 
 ## Config Fly.IO
 https://fly.io/docs/litefs/speedrun/
