@@ -36,6 +36,8 @@ pub fn handle_request(req: Request, ctx: Context) {
     ["callback"] -> callback(req)
     ["song"] -> song(req, ctx)
     ["album"] -> album(req, ctx)
+    ["admin", _] -> admin(req, ctx)
+    ["logout"] -> logout(req)
     _ -> wisp.not_found()
   }
 }
