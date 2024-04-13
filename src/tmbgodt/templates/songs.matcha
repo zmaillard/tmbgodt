@@ -1,0 +1,33 @@
+{> with home as Home
+
+{> import tmbgodt/templates/song as song_template
+{> import tmbgodt/models/home.{type Home}
+{> import tmbgodt/album.{type Album}
+{> import gleam/int
+
+
+<div id="songs">
+{[ song_template.render_builder(home.songs) ]}
+</div>
+  {% if home.is_authenticated %}
+  <section class="section">
+    <div class="container">
+      <form 
+      method="POST" 
+      hx-post="/song" 
+      hx-target="#songs"
+      enctype="multipart/form-data">
+      <div class="select is-link">
+  <select name="album">
+          {% for album as Album in home.albums %}
+          <option value={{int.to_string(album.id)}}>{{album.name}}</option>
+          {% endfor %}
+  </select>
+    <input class="control" type="text" name="song" />
+<button class="button" type="submit">Add Song</button>
+</form>
+</div>
+    </div>
+  </section>
+  {% else %}
+  {% endif %}
