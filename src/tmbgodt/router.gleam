@@ -36,8 +36,17 @@ pub fn handle_request(req: Request, ctx: Context) {
     ["callback"] -> callback(req)
     ["song"] -> song(req, ctx)
     ["album"] -> album(req, ctx)
-    ["admin", _] -> admin(req, ctx)
-    ["logout"] -> logout(req)
+    ["admin", ..] -> admin(req, ctx)
+    _ -> wisp.not_found()
+  }
+}
+
+fn admin(req: Request, ctx: Context) -> Response {
+  use <- web.authentication_middleware(req)
+
+  case wisp.path_segments(req) {
+    [_, "song"] -> song(req, ctx)
+    [_, "album"] -> album(req, ctx)
     _ -> wisp.not_found()
   }
 }
