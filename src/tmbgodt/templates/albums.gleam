@@ -19,16 +19,6 @@ pub fn render_builder(model model: AlbumEdit) -> StringBuilder {
     string_builder.append(
       builder,
       "
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset=\"utf-8\">
-    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
-    <title>They Might Be Giants Of The Day</title>
-    <link rel=\"stylesheet\" href=\"/static/index.css\">
-    <script src=\"https://unpkg.com/htmx.org@1.9.11\"></script>
-  </head>
-  <body>
   <section class=\"section\" id=\"albums\">
   ",
     )
@@ -129,8 +119,6 @@ pub fn render_builder(model model: AlbumEdit) -> StringBuilder {
     string_builder.append(
       builder,
       "
-  </body>
-</html>
 ",
     )
 

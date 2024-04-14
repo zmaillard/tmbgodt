@@ -1,7 +1,7 @@
 default:
   @just --list
 
-run:
+run: template tailwind
   gleam run
 
 template:

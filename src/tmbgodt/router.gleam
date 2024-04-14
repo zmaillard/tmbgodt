@@ -9,7 +9,9 @@ import tmbgodt/song
 import tmbgodt/models/home.{Home}
 import tmbgodt/models/albumedit.{AlbumEdit}
 import wisp.{type Request, type Response}
+import tmbgodt/templates/base as base_template
 import tmbgodt/templates/home as home_template
+import tmbgodt/templates/songs as songs_template
 import tmbgodt/templates/album as album_template
 import tmbgodt/templates/albums as albums_template
 import tmbgodt/templates/song as song_template
@@ -161,23 +163,36 @@ fn get_album(req: Request, ctx: Context) -> Response {
   let is_auth = web.is_authenticated(req)
 
   albums_template.render_builder(AlbumEdit(albums, album_types, is_auth))
+  |> base_template.render_builder
   |> wisp.html_response(200)
 }
 
 fn song(req: Request, ctx: Context) -> Response {
   case req.method {
     http.Post -> create_song(req, ctx)
+    http.Get -> get_all_songs(req, ctx)
     _ -> wisp.method_not_allowed([http.Post])
   }
 }
 
-fn home(req: Request, ctx: Context) -> Response {
+fn get_all_songs(req: Request, ctx: Context) -> Response {
   let albums = album.all_albums(ctx.db)
   let songs = song.all_songs(ctx.db)
   let is_auth = web.is_authenticated(req)
 
   let home = Home(songs, albums, is_auth)
 
-  home_template.render_builder(home)
+  songs_template.render_builder(home)
+  |> base_template.render_builder
+  |> wisp.html_response(200)
+}
+
+fn home(_: Request, ctx: Context) -> Response {
+  let assert Ok(song) =
+    song.all_songs(ctx.db)
+    |> list.last
+
+  home_template.render_builder(song)
+  |> base_template.render_builder
   |> wisp.html_response(200)
 }
