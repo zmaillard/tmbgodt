@@ -9,7 +9,7 @@ pub fn render_builder(content content: StringBuilder) -> StringBuilder {
       builder,
       "
 <!DOCTYPE html>
-<html>
+<html lang=\"en\">
   <head>
     <meta charset=\"utf-8\">
     <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
@@ -17,7 +17,7 @@ pub fn render_builder(content content: StringBuilder) -> StringBuilder {
     <link rel=\"stylesheet\" href=\"/static/index.css\">
     <script src=\"https://unpkg.com/htmx.org@1.9.11\"></script>
   </head>
-  <body>
+  <body class=\"bg-white dark:bg-black\">
     ",
     )
   let builder = string_builder.append_builder(builder, content)
@@ -25,7 +25,7 @@ pub fn render_builder(content content: StringBuilder) -> StringBuilder {
     string_builder.append(
       builder,
       "
-      <footer class=\"p-4 bg-white md:p-8 lg:p-10 dark:bg-gray-800 mt-4\">
+      <footer class=\"p-4 bg-white md:p-8 lg:p-10 dark:bg-black mt-4\">
         <div class=\"mx-auto max-w-screen-xl text-center\">
 
         <ul class=\"flex flex-wrap justify-center items-center mb-6 text-gray-900 dark:text-white\">
