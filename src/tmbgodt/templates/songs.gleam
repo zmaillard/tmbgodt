@@ -33,6 +33,8 @@ pub fn render_builder(home home: Home) -> StringBuilder {
       builder,
       "
 </div>
+  <div class=\"w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700\">
+
   ",
     )
   let builder = case home.is_authenticated {
@@ -41,15 +43,14 @@ pub fn render_builder(home home: Home) -> StringBuilder {
         string_builder.append(
           builder,
           "
-  <section class=\"section\">
-    <div class=\"container\">
       <form 
       method=\"POST\" 
       hx-post=\"/song\" 
       hx-target=\"#songs\"
       enctype=\"multipart/form-data\">
-      <div class=\"select is-link\">
-  <select name=\"album\">
+    <div class=\"mb-6\">
+        <label for=\"album\" class=\"block mb-2 text-sm font-medium text-gray-900 dark:text-white\">Email address</label>
+        <select id=\"album\" name=\"album\" class=\"bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500\">
           ",
         )
       let builder =
@@ -77,12 +78,22 @@ pub fn render_builder(home home: Home) -> StringBuilder {
           builder,
           "
   </select>
-    <input class=\"control\" type=\"text\" name=\"song\" />
-<button class=\"button\" type=\"submit\">Add Song</button>
-</form>
+    </div> 
+
+    <div class=\"mb-6\">
+        <label for=\"song\" class=\"block mb-2 text-sm font-medium text-gray-900 dark:text-white\">Song</label>
+        <input type=\"text\" id=\"song\" name=\"song\" class=\"bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500\" required />
+    </div> 
+    
+    <div class=\"mb-6\">
+        <label for=\"applemusic\" class=\"block mb-2 text-sm font-medium text-gray-900 dark:text-white\">Apple Music</label>
+        <input type=\"text\" id=\"applemusic\" name=\"applemusic\" class=\"bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500\" required />
+    </div> 
+    
+    <button type=\"submit\" class=\"text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800\">Add Song</button>
 </div>
-    </div>
-  </section>
+</form>
+  </div>
   ",
         )
 
