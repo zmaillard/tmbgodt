@@ -9,7 +9,13 @@ import gleam/http.{Post}
 import gleam/http/request
 
 pub type Song {
-  Song(day: Int, name: String, album_name: String, year: Int)
+  Song(
+    day: Int,
+    name: String,
+    album_name: String,
+    year: Int,
+    songwhip_url: Option(String),
+  )
 }
 
 type SongwhipUrl {
@@ -45,12 +51,13 @@ pub fn songwhip_url(apple_music_url: String) -> Option(String) {
 }
 
 fn song_row_decoder() -> dynamic.Decoder(Song) {
-  dynamic.decode4(
+  dynamic.decode5(
     Song,
     dynamic.element(0, dynamic.int),
     dynamic.element(1, dynamic.string),
     dynamic.element(2, dynamic.string),
     dynamic.element(3, dynamic.int),
+    dynamic.element(4, dynamic.optional(dynamic.string)),
   )
 }
 
@@ -61,7 +68,8 @@ pub fn all_songs(db: sqlight.Connection) -> List(Song) {
         song.day,
         song.name,
         album.name,
-        album.year
+        album.year,
+        song.songwhip
       from
         song
       inner join album on song.albumId = album.id
@@ -84,7 +92,7 @@ pub fn insert_song(
   let sql =
     "
       insert into song
-        (name, albumId, songwhipUrl)
+        (name, albumId, songwhip)
       values
         (?1, ?2, ?3)
       returning

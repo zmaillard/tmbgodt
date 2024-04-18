@@ -93,7 +93,12 @@ fn create_song(request: Request, ctx: Context) -> Response {
 
     use apple_music_link <- result.try(web.key_find(params.values, "applemusic"))
     let songwhip_url = song.songwhip_url(apple_music_link)
-    use id <- result.try(song.insert_song(song_name, album_id, ctx.db))
+    use id <- result.try(song.insert_song(
+      song_name,
+      album_id,
+      songwhip_url,
+      ctx.db,
+    ))
 
     Ok(id)
   }
