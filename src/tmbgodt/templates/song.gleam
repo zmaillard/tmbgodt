@@ -82,7 +82,8 @@ pub fn render_builder(songs songs: List(Song)) -> StringBuilder {
       "
     </tbody>
 </table>
-</div>",
+</div>
+",
     )
 
   builder
