@@ -1,12 +1,12 @@
-import sqlight
-import gleam/result.{try}
 import gleam/dynamic.{field, string}
-import gleam/json
-import gleam/option.{type Option, None, Some}
-import tmbgodt/error.{type AppError}
 import gleam/hackney
 import gleam/http.{Post}
 import gleam/http/request
+import gleam/json
+import gleam/option.{type Option, None, Some}
+import gleam/result.{try}
+import sqlight
+import tmbgodt/error.{type AppError}
 
 pub type Song {
   Song(

@@ -1,6 +1,6 @@
-import sqlight
 import gleam/dynamic
 import gleam/result
+import sqlight
 import tmbgodt/error.{type AppError}
 
 pub type Album {
