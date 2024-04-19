@@ -102,12 +102,20 @@ fn create_song(request: Request, ctx: Context) -> Response {
       |> result.replace_error(error.InvalidAlbum),
     )
 
-    use id <- result.try(song.insert_song(song_name, album_id, ctx.db))
+    use apple_music_link <- result.try(web.key_find(params.values, "applemusic"))
+    let songwhip_url = song.songwhip_url(apple_music_link)
+    use id <- result.try(song.insert_song(
+      song_name,
+      album_id,
+      songwhip_url,
+      ctx.db,
+    ))
 
     Ok(id)
   }
 
   let assert Ok(_) = res
+
   let songs = song.all_songs(ctx.db)
 
   song_template.render_builder(songs)
