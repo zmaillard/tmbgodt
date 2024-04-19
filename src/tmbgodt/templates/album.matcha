@@ -3,19 +3,23 @@
 {> import tmbgodt/album.{type Album}
 {> import gleam/int
 
-<table class="table-auto">
-    <thead>
+<div class="relative overflow-x-auto">
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
         <tr>
-        <th>Album</th>
-        <th>Type</th>
-        <th>Year</th>
+          <th scope="col" class="px-6 py-3">Album</th>
+          <th scope="col" class="px-6 py-3">Type</th>
+          <th scope="col" class="px-6 py-3">Year</th>
         </tr>
     </thead>
+    <tbody>
     {% for album as Album in albums %}
-    <tr>
-        <td>{{album.name}}</td>
-        <td>{{album.album_type}}</td>
-        <td>{{int.to_string(album.year)}}</td>
+     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+        <td class="px-6 py-4">{{album.name}}</td>
+        <td class="px-6 py-4">{{album.album_type}}</td>
+        <td class="px-6 py-4">{{int.to_string(album.year)}}</td>
     </tr>
     {% endfor %}
+    </tbody>
 </table>
+</div>

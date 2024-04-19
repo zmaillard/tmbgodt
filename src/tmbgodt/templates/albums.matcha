@@ -8,16 +8,15 @@
   <section class="section" id="albums">
   {[ album_template.render_builder(model.albums) ]}
   </section>
-  {% if model.is_authenticated %}
-  
+
   <section class="section">
     <div class="container">
-      <form 
-      method="POST" 
-      hx-post="/album" 
+      <form
+      method="POST"
+      hx-post="/album"
       hx-target="#albums"
       enctype="multipart/form-data">
-      
+
 
     <div class="grid gap-6 mb-6 md:grid-cols-2">
         <div>
@@ -32,17 +31,15 @@
     <div class="mb-6">
       <label for="album_type" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select an Album Type</label>
   <select id="album_type" name="album_type" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-    
+
           {% for albumtype as AlbumType in model.album_types %}
           <option value={{int.to_string(albumtype.id)}}>{{albumtype.name}}</option>
           {% endfor %}
   </select>
-    </div> 
+    </div>
     <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add Album</button>
 
 </form>
 </div>
     </div>
   </section>
-  {% else %}
-  {% endif %}

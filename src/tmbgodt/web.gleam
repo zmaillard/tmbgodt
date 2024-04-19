@@ -1,10 +1,10 @@
+import gleam/erlang/os
 import gleam/list
 import gleam/result
 import tmbgodt/database
-import tmbgodt/models/auth.{type Auth}
 import tmbgodt/error.{type AppError}
+import tmbgodt/models/auth.{type Auth}
 import wisp.{type Response}
-import gleam/erlang/os
 
 const cookie_name = "tmbgid"
 

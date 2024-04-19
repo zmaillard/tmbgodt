@@ -1,13 +1,13 @@
-import gleam/erlang/process
 import gleam/erlang/os
+import gleam/erlang/process
 import gleam/int
 import gleam/result
-import wisp
 import mist
 import tmbgodt/database
+import tmbgodt/models/auth
 import tmbgodt/router
 import tmbgodt/web.{Context}
-import tmbgodt/models/auth
+import wisp
 
 fn database_name() {
   case os.get_env("DATABASE_PATH") {

@@ -1,25 +1,25 @@
-import gleam/http
-import gleam/list
-import gleam/int
+import birl
 import gleam/erlang/os
-import tmbgodt/web.{type Context}
-import tmbgodt/album
-import tmbgodt/error
-import tmbgodt/song
-import tmbgodt/models/home.{Home}
-import tmbgodt/models/albumedit.{AlbumEdit}
-import wisp.{type Request, type Response}
-import tmbgodt/templates/base as base_template
-import tmbgodt/templates/home as home_template
-import tmbgodt/templates/songs as songs_template
-import tmbgodt/templates/album as album_template
-import tmbgodt/templates/albums as albums_template
-import tmbgodt/templates/song as song_template
-import tmbgodt/models/auth
+import gleam/http
+import gleam/int
+import gleam/list
 import gleam/result
 import prng/random
 import prng/seed
-import birl
+import tmbgodt/album
+import tmbgodt/error
+import tmbgodt/models/albumedit.{AlbumEdit}
+import tmbgodt/models/auth
+import tmbgodt/models/home.{Home}
+import tmbgodt/song
+import tmbgodt/templates/album as album_template
+import tmbgodt/templates/albums as albums_template
+import tmbgodt/templates/base as base_template
+import tmbgodt/templates/home as home_template
+import tmbgodt/templates/song as song_template
+import tmbgodt/templates/songs as songs_template
+import tmbgodt/web.{type Context}
+import wisp.{type Request, type Response}
 
 const cookie_name = "tmbgid"
 
@@ -36,10 +36,36 @@ pub fn handle_request(req: Request, ctx: Context) {
     [] -> home(req, ctx)
     ["login"] -> login(req, ctx)
     ["callback"] -> callback(req)
-    ["song"] -> song(req, ctx)
-    ["album"] -> album(req, ctx)
+    ["song"] ->
+      case req.method {
+        http.Get -> get_all_songs(req, ctx, False)
+        _ -> wisp.method_not_allowed([http.Get])
+      }
+    ["admin", ..] -> admin(req, ctx)
     _ -> wisp.not_found()
   }
+}
+
+fn admin(req: Request, ctx: Context) -> Response {
+  use <- web.authentication_middleware(req)
+
+  case wisp.path_segments(req) {
+    [_, "logout"] -> logout(req, ctx)
+    [_, "song"] ->
+      case req.method {
+        http.Post -> create_song(req, ctx)
+        http.Get -> get_all_songs(req, ctx, True)
+        _ -> wisp.method_not_allowed([http.Post])
+      }
+    [_, "album"] -> album(req, ctx)
+    _ -> wisp.not_found()
+  }
+}
+
+fn logout(req: Request, _: Context) -> Response {
+  wisp.redirect("/")
+  |> wisp.set_cookie(req, state_cookie, "", wisp.Signed, 0)
+  |> wisp.set_cookie(req, cookie_name, "", wisp.Signed, 0)
 }
 
 fn callback(req: Request) -> Response {
@@ -154,28 +180,18 @@ fn create_album(req: Request, ctx: Context) -> Response {
   |> wisp.html_response(201)
 }
 
-fn get_album(req: Request, ctx: Context) -> Response {
+fn get_album(_: Request, ctx: Context) -> Response {
   let albums = album.all_albums(ctx.db)
   let album_types = album.all_album_types(ctx.db)
-  let is_auth = web.is_authenticated(req)
 
-  albums_template.render_builder(AlbumEdit(albums, album_types, is_auth))
+  albums_template.render_builder(AlbumEdit(albums, album_types))
   |> base_template.render_builder
   |> wisp.html_response(200)
 }
 
-fn song(req: Request, ctx: Context) -> Response {
-  case req.method {
-    http.Post -> create_song(req, ctx)
-    http.Get -> get_all_songs(req, ctx)
-    _ -> wisp.method_not_allowed([http.Post])
-  }
-}
-
-fn get_all_songs(req: Request, ctx: Context) -> Response {
+fn get_all_songs(_: Request, ctx: Context, is_auth: Bool) -> Response {
   let albums = album.all_albums(ctx.db)
   let songs = song.all_songs(ctx.db)
-  let is_auth = web.is_authenticated(req)
 
   let home = Home(songs, albums, is_auth)
 

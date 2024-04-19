@@ -1,5 +1,5 @@
-import tmbgodt/error.{type AppError}
 import sqlight
+import tmbgodt/error.{type AppError}
 
 pub type Connection =
   sqlight.Connection
