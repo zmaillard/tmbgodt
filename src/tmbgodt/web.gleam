@@ -38,7 +38,7 @@ pub fn authentication_middleware(
 ) -> wisp.Response {
   case is_authenticated(req) {
     True -> handle_request()
-    False -> wisp.bad_request()
+    False -> wisp.redirect("/login")
   }
 }
 

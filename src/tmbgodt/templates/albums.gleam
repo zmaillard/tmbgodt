@@ -38,7 +38,7 @@ pub fn render_builder(model model: AlbumEdit) -> StringBuilder {
     <div class=\"container\">
       <form
       method=\"POST\"
-      hx-post=\"/album\"
+      hx-post=\"/admin/album\"
       hx-target=\"#albums\"
       enctype=\"multipart/form-data\">
 
