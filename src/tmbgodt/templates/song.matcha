@@ -20,7 +20,7 @@
     <tbody>
     {% for song as Song in songs %}
      <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{day.convert_day_to_date(song.day)}}</th>
+        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{day.to_day_string(song.day)}}</th>
         <td class="px-6 py-4">{{song.name}}</td>
         <td class="px-6 py-4">{{song.album_name}}</td>
         <td class="px-6 py-4">{{int.to_string(song.year)}}</td>

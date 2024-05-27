@@ -1,16 +1,17 @@
+import birl
 import gleam/dynamic.{field, string}
 import gleam/hackney
 import gleam/http.{Post}
 import gleam/http/request
 import gleam/json
 import gleam/option.{type Option, None, Some}
+import gleam/pgo
 import gleam/result.{try}
-import sqlight
 import tmbgodt/error.{type AppError}
 
 pub type Song {
   Song(
-    day: Int,
+    day: #(Int, Int, Int),
     name: String,
     album_name: String,
     year: Int,
@@ -53,7 +54,7 @@ pub fn songwhip_url(apple_music_url: String) -> Option(String) {
 fn song_row_decoder() -> dynamic.Decoder(Song) {
   dynamic.decode5(
     Song,
-    dynamic.element(0, dynamic.int),
+    dynamic.element(0, dynamic.tuple3(dynamic.int, dynamic.int, dynamic.int)),
     dynamic.element(1, dynamic.string),
     dynamic.element(2, dynamic.string),
     dynamic.element(3, dynamic.int),
@@ -61,63 +62,75 @@ fn song_row_decoder() -> dynamic.Decoder(Song) {
   )
 }
 
-pub fn all_songs(db: sqlight.Connection) -> List(Song) {
+pub fn all_songs(db: pgo.Connection) -> List(Song) {
   let sql =
     "
-      select
-        song.day,
-        song.name,
-        album.name,
-        album.year,
-        song.songwhip
-      from
-        song
-      inner join album on song.albumId = album.id
-      order by
-       song.day
+    select
+         songs.day,
+         songs.name,
+         album.name,
+         album.year,
+         songs.songwhip
+       from
+         songs
+       inner join album on songs.album_id = album.id
+       order by
+        songs.day
     "
 
-  let assert Ok(rows) =
-    sqlight.query(sql, on: db, with: [], expecting: song_row_decoder())
+  let assert Ok(returned) = pgo.execute(sql, db, [], song_row_decoder())
 
-  rows
+  returned.rows
 }
 
 pub fn insert_song(
   name: String,
   album_id: Int,
   songwhip_url: Option(String),
-  db: sqlight.Connection,
+  db: pgo.Connection,
 ) -> Result(Int, AppError) {
   let sql =
     "
-      insert into song
-        (name, albumId, songwhip)
-      values
-        (?1, ?2, ?3)
-      returning
-       day
+    insert into songs
+      (name, album_id, songwhip, day, inserted_at, updated_at)
+    SELECT $1, $2, $3, max(day) + 1, now(), now()
+      FROM songs
+    returning
+     id
         "
 
-  use rows <- result.then(
-    sqlight.query(
+  use results <- result.then(
+    pgo.execute(
       sql,
-      on: db,
-      with: [
-        sqlight.text(name),
-        sqlight.int(album_id),
-        sqlight.nullable(sqlight.text, songwhip_url),
-      ],
-      expecting: dynamic.element(0, dynamic.int),
+      db,
+      [pgo.text(name), pgo.int(album_id), pgo.nullable(pgo.text, songwhip_url)],
+      dynamic.element(0, dynamic.int),
     )
     |> result.map_error(fn(error) {
-      case error.code, error.message {
-        _, _ -> error.Database
+      case error {
+        _ -> error.Database
       }
     }),
   )
 
-  //TODO: Add detail
-  let assert [id] = rows
+  let assert [id] = results.rows
   Ok(id)
 }
+// pub fn convert_time(time: Time) -> pgo.Value {
+//   time
+//   |> birl.to_erlang_universal_datetime()
+//   |> dynamic.from()
+//   |> dynamic.unsafe_coerce()
+// }
+
+// pub fn decode_time(data: Dynamic) {
+//   data
+//   |> dynamic.tuple2(decode_time_tuple, decode_time_tuple)
+//   |> result.map(birl.from_erlang_universal_datetime)
+// }
+
+// fn rounded_float(data: Dynamic) {
+//   data
+//   |> dynamic.float()
+//   |> result.map(float.round)
+// }

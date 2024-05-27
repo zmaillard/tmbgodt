@@ -44,8 +44,7 @@ pub fn render_builder(songs songs: List(Song)) -> StringBuilder {
      <tr class=\"bg-white border-b dark:bg-gray-800 dark:border-gray-700\">
         <th scope=\"row\" class=\"px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white\">",
         )
-      let builder =
-        string_builder.append(builder, day.convert_day_to_date(song.day))
+      let builder = string_builder.append(builder, day.to_day_string(song.day))
       let builder =
         string_builder.append(
           builder,

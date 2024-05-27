@@ -1,6 +1,6 @@
 import gleam/dynamic
+import gleam/pgo
 import gleam/result
-import sqlight
 import tmbgodt/error.{type AppError}
 
 pub type Album {
@@ -29,62 +29,60 @@ pub fn album_type_row_decoder() -> dynamic.Decoder(AlbumType) {
   )
 }
 
-pub fn all_album_types(db: sqlight.Connection) -> List(AlbumType) {
+pub fn all_album_types(db: pgo.Connection) -> List(AlbumType) {
   let sql =
     "
         SELECT id, name
         FROM album_type
         "
-  let assert Ok(rows) =
-    sqlight.query(sql, on: db, with: [], expecting: album_type_row_decoder())
+  let assert Ok(results) = pgo.execute(sql, db, [], album_type_row_decoder())
 
-  rows
+  results.rows
 }
 
-pub fn all_albums(db: sqlight.Connection) -> List(Album) {
+pub fn all_albums(db: pgo.Connection) -> List(Album) {
   let sql =
     "
         SELECT album.id, album.name, album.year, album_type.name
         FROM album
         INNER JOIN album_type ON album.album_type_id = album_type.id
-        order by album.year 
+        order by album.year
         "
-  let assert Ok(rows) =
-    sqlight.query(sql, on: db, with: [], expecting: album_row_decoder())
+  let assert Ok(results) = pgo.execute(sql, db, [], album_row_decoder())
 
-  rows
+  results.rows
 }
 
 pub fn insert_album(
   name: String,
   year: Int,
   album_type: Int,
-  db: sqlight.Connection,
+  db: pgo.Connection,
 ) -> Result(Int, AppError) {
   let sql =
     "
       insert into album
-        (name, year, album_type_id)
+        (name, year, album_type_id, inserted_at, updated_at)
       values
-        (?1, ?2, ?3)
+        (?1, ?2, ?3, now(), now())
       returning
-       id 
+       id
         "
-  use rows <- result.then(
-    sqlight.query(
+  use results <- result.then(
+    pgo.execute(
       sql,
-      on: db,
-      with: [sqlight.text(name), sqlight.int(year), sqlight.int(album_type)],
-      expecting: dynamic.element(0, dynamic.int),
+      db,
+      [pgo.text(name), pgo.int(year), pgo.int(album_type)],
+      dynamic.element(0, dynamic.int),
     )
     |> result.map_error(fn(error) {
-      case error.code, error.message {
-        _, _ -> error.Database
+      case error {
+        _ -> error.Database
       }
     }),
   )
 
   //TODO: Add detail
-  let assert [id] = rows
+  let assert [id] = results.rows
   Ok(id)
 }
