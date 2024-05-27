@@ -6,12 +6,12 @@ import gleam/http/request
 import gleam/json
 import gleam/option.{type Option, None, Some}
 import gleam/pgo
-import gleam/result.{try}
+import gleam/result
 import tmbgodt/error.{type AppError}
 
 pub type Song {
   Song(
-    day: #(Int, Int, Int),
+    day: birl.Day,
     name: String,
     album_name: String,
     year: Int,
@@ -54,7 +54,15 @@ pub fn songwhip_url(apple_music_url: String) -> Option(String) {
 fn song_row_decoder() -> dynamic.Decoder(Song) {
   dynamic.decode5(
     Song,
-    dynamic.element(0, dynamic.tuple3(dynamic.int, dynamic.int, dynamic.int)),
+    dynamic.element(
+      0,
+      dynamic.decode3(
+        birl.Day,
+        dynamic.element(0, dynamic.int),
+        dynamic.element(1, dynamic.int),
+        dynamic.element(2, dynamic.int),
+      ),
+    ),
     dynamic.element(1, dynamic.string),
     dynamic.element(2, dynamic.string),
     dynamic.element(3, dynamic.int),
@@ -116,21 +124,3 @@ pub fn insert_song(
   let assert [id] = results.rows
   Ok(id)
 }
-// pub fn convert_time(time: Time) -> pgo.Value {
-//   time
-//   |> birl.to_erlang_universal_datetime()
-//   |> dynamic.from()
-//   |> dynamic.unsafe_coerce()
-// }
-
-// pub fn decode_time(data: Dynamic) {
-//   data
-//   |> dynamic.tuple2(decode_time_tuple, decode_time_tuple)
-//   |> result.map(birl.from_erlang_universal_datetime)
-// }
-
-// fn rounded_float(data: Dynamic) {
-//   data
-//   |> dynamic.float()
-//   |> result.map(float.round)
-// }

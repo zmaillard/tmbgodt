@@ -6,7 +6,6 @@ import gleam/string_builder.{type StringBuilder}
 import gleam/int
 import tmbgodt/day
 import tmbgodt/song.{type Song}
-import wisp
 
 pub fn render_builder(songs songs: List(Song)) -> StringBuilder {
   let builder = string_builder.from_string("")
