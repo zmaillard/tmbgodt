@@ -12,7 +12,9 @@ fn postgres_config() -> pgo.Config {
     host: host,
     database: database,
     user: user,
+    ssl: True,
     password: Some(password),
+    connection_parameters: [#("options", "endpoint=ep-black-dawn-34735286")],
   )
 }
 
@@ -22,7 +24,6 @@ pub fn connect() -> pgo.Connection {
 
 pub fn with_connection(f: fn(pgo.Connection) -> t) -> t {
   let connection = pgo.connect(postgres_config())
-
   let result = f(connection)
 
   result
