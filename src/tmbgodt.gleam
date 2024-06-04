@@ -9,13 +9,6 @@ import tmbgodt/router
 import tmbgodt/web.{Context}
 import wisp
 
-fn database_name() {
-  case os.get_env("DATABASE_PATH") {
-    Ok(path) -> path
-    Error(Nil) -> "/litefs/tmbg.sqlite"
-  }
-}
-
 pub fn main() {
   wisp.configure_logger()
 
@@ -29,8 +22,7 @@ pub fn main() {
   let auth = auth.Auth(domain, client_id, callback)
 
   let handle_request = fn(req) {
-    let assert Ok(_) = database.with_connection(database_name(), database.empty)
-    use db <- database.with_connection(database_name())
+    use db <- database.with_connection()
     let ctx = Context(db: db, auth: auth, static_directory: static_directory())
     router.handle_request(req, ctx)
   }

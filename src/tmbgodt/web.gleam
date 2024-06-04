@@ -1,7 +1,7 @@
 import gleam/erlang/os
 import gleam/list
+import gleam/pgo
 import gleam/result
-import tmbgodt/database
 import tmbgodt/error.{type AppError}
 import tmbgodt/models/auth.{type Auth}
 import wisp.{type Response}
@@ -9,7 +9,7 @@ import wisp.{type Response}
 const cookie_name = "tmbgid"
 
 pub type Context {
-  Context(db: database.Connection, auth: Auth, static_directory: String)
+  Context(db: pgo.Connection, auth: Auth, static_directory: String)
 }
 
 pub fn is_authenticated(req: wisp.Request) -> Bool {
