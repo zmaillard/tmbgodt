@@ -11,12 +11,17 @@ import tmbgodt/error
 import tmbgodt/models/albumedit.{AlbumEdit}
 import tmbgodt/models/auth
 import tmbgodt/models/home.{Home}
+import tmbgodt/models/songedit.{SongEdit}
+import tmbgodt/models/songrow.{SongRow}
+import tmbgodt/models/songs.{Songs}
 import tmbgodt/song
 import tmbgodt/templates/album as album_template
 import tmbgodt/templates/albums as albums_template
 import tmbgodt/templates/base as base_template
 import tmbgodt/templates/home as home_template
 import tmbgodt/templates/song as song_template
+import tmbgodt/templates/songedit as song_edit_template
+import tmbgodt/templates/songrow as song_row_template
 import tmbgodt/templates/songs as songs_template
 import tmbgodt/web.{type Context}
 import wisp.{type Request, type Response}
@@ -51,11 +56,22 @@ fn admin(req: Request, ctx: Context) -> Response {
 
   case wisp.path_segments(req) {
     [_, "logout"] -> logout(req, ctx)
+    [_, "song", id] ->
+      case req.method {
+        http.Get -> get_song(req, ctx, id)
+        _ -> wisp.method_not_allowed([http.Get])
+      }
+    [_, "song", id, "edit"] ->
+      case req.method {
+        http.Get -> get_song_edit(req, ctx, id)
+        http.Put -> update_song(req, ctx, id)
+        _ -> wisp.method_not_allowed([http.Get, http.Put])
+      }
     [_, "song"] ->
       case req.method {
         http.Post -> create_song(req, ctx)
         http.Get -> get_all_songs(req, ctx, True)
-        _ -> wisp.method_not_allowed([http.Post])
+        _ -> wisp.method_not_allowed([http.Post, http.Get])
       }
     [_, "album"] -> album(req, ctx)
     _ -> wisp.not_found()
@@ -133,7 +149,7 @@ fn create_song(request: Request, ctx: Context) -> Response {
 
   let songs = song.all_songs(ctx.db)
 
-  song_template.render_builder(songs)
+  song_template.render_builder(Songs(songs, True))
   |> wisp.html_response(201)
 }
 
@@ -189,11 +205,65 @@ fn get_album(_: Request, ctx: Context) -> Response {
   |> wisp.html_response(200)
 }
 
+fn update_song(req: Request, ctx: Context, song_id: String) -> Response {
+  use <- web.authentication_middleware(req)
+  use params <- wisp.require_form(req)
+  let assert Ok(song_id_int) = int.parse(song_id)
+
+  let res = {
+    use song_name <- result.try(web.key_find(params.values, "song"))
+    use album <- result.try(web.key_find(params.values, "album"))
+    use album_id <- result.try(
+      int.parse(album)
+      |> result.replace_error(error.InvalidAlbum),
+    )
+
+    use id <- result.try(song.update_song(
+      song_name,
+      album_id,
+      song_id_int,
+      ctx.db,
+    ))
+
+    Ok(id)
+  }
+
+  let assert Ok(id) = res
+
+  let song = song.song_by_id(ctx.db, id)
+
+  let song_row = SongRow(song, True)
+
+  song_row_template.render_builder(song_row)
+  |> wisp.html_response(200)
+}
+
+fn get_song(_req: Request, ctx: Context, song_id: String) -> Response {
+  let assert Ok(song_id_int) = int.parse(song_id)
+  let song = song.song_by_id(ctx.db, song_id_int)
+
+  let song_row = SongRow(song, True)
+
+  song_row_template.render_builder(song_row)
+  |> wisp.html_response(200)
+}
+
+fn get_song_edit(_req: Request, ctx: Context, song_id: String) -> Response {
+  let assert Ok(song_id_int) = int.parse(song_id)
+  let albums = album.all_albums(ctx.db)
+  let song = song.song_by_id(ctx.db, song_id_int)
+
+  let song_edit = SongEdit(song, albums)
+
+  song_edit_template.render_builder(song_edit)
+  |> wisp.html_response(200)
+}
+
 fn get_all_songs(_: Request, ctx: Context, is_auth: Bool) -> Response {
   let albums = album.all_albums(ctx.db)
   let songs = song.all_songs(ctx.db)
 
-  let home = Home(songs, albums, is_auth)
+  let home = Home(Songs(songs, is_auth), albums, is_auth)
 
   songs_template.render_builder(home)
   |> base_template.render_builder

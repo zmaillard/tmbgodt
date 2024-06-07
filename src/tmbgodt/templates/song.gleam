@@ -5,9 +5,10 @@ import gleam/string_builder.{type StringBuilder}
 
 import gleam/int
 import tmbgodt/day
+import tmbgodt/models/songs.{type Songs}
 import tmbgodt/song.{type Song}
 
-pub fn render_builder(songs songs: List(Song)) -> StringBuilder {
+pub fn render_builder(songs songs: Songs) -> StringBuilder {
   let builder = string_builder.from_string("")
   let builder =
     string_builder.append(
@@ -29,18 +30,40 @@ pub fn render_builder(songs songs: List(Song)) -> StringBuilder {
           <th scope=\"col\" class=\"px-6 py-3\">Song</th>
           <th scope=\"col\" class=\"px-6 py-3\">Album</th>
           <th scope=\"col\" class=\"px-6 py-3\">Year</th>
+            ",
+    )
+  let builder = case songs.is_authenticated {
+    True -> {
+      let builder =
+        string_builder.append(
+          builder,
+          "
+          <th scope=\"col\" class=\"px-6 py-3\">Action</th>
+            ",
+        )
+
+      builder
+    }
+    False -> {
+      builder
+    }
+  }
+  let builder =
+    string_builder.append(
+      builder,
+      "
         </tr>
     </thead>
     <tbody>
     ",
     )
   let builder =
-    list.fold(songs, builder, fn(builder, song: Song) {
+    list.fold(songs.songs, builder, fn(builder, song: Song) {
       let builder =
         string_builder.append(
           builder,
           "
-     <tr class=\"bg-white border-b dark:bg-gray-800 dark:border-gray-700\">
+     <tr hx-target=\"this\" hx-swap=\"outerHTML\" class=\"bg-white border-b dark:bg-gray-800 dark:border-gray-700\">
         <th scope=\"row\" class=\"px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white\">",
         )
       let builder = string_builder.append(builder, day.to_day_string(song.day))
@@ -69,6 +92,34 @@ pub fn render_builder(songs songs: List(Song)) -> StringBuilder {
         string_builder.append(
           builder,
           "</td>
+        ",
+        )
+      let builder = case songs.is_authenticated {
+        True -> {
+          let builder =
+            string_builder.append(
+              builder,
+              "
+          <td scope=\"col\" class=\"px-6 py-3\"><button hx-get=\"/admin/song/",
+            )
+          let builder = string_builder.append(builder, int.to_string(song.id))
+          let builder =
+            string_builder.append(
+              builder,
+              "/edit\">Edit</button></td>
+        ",
+            )
+
+          builder
+        }
+        False -> {
+          builder
+        }
+      }
+      let builder =
+        string_builder.append(
+          builder,
+          "
     </tr>
     ",
         )
@@ -88,6 +139,6 @@ pub fn render_builder(songs songs: List(Song)) -> StringBuilder {
   builder
 }
 
-pub fn render(songs songs: List(Song)) -> String {
+pub fn render(songs songs: Songs) -> String {
   string_builder.to_string(render_builder(songs: songs))
 }

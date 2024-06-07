@@ -1,7 +1,8 @@
-{> with songs as List(Song)
+{> with songs as Songs
 
 {> import gleam/int
 {> import tmbgodt/song.{type Song}
+{> import tmbgodt/models/songs.{type Songs}
 {> import tmbgodt/day
 
 
@@ -14,15 +15,21 @@
           <th scope="col" class="px-6 py-3">Song</th>
           <th scope="col" class="px-6 py-3">Album</th>
           <th scope="col" class="px-6 py-3">Year</th>
+            {% if songs.is_authenticated %}
+          <th scope="col" class="px-6 py-3">Action</th>
+            {% endif %}
         </tr>
     </thead>
     <tbody>
-    {% for song as Song in songs %}
-     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+    {% for song as Song in songs.songs %}
+     <tr hx-target="this" hx-swap="outerHTML" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
         <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{day.to_day_string(song.day)}}</th>
         <td class="px-6 py-4">{{song.name}}</td>
         <td class="px-6 py-4">{{song.album_name}}</td>
         <td class="px-6 py-4">{{int.to_string(song.year)}}</td>
+        {% if songs.is_authenticated %}
+          <td scope="col" class="px-6 py-3"><button hx-get="/admin/song/{{int.to_string(song.id)}}/edit">Edit</button></td>
+        {% endif %}
     </tr>
     {% endfor %}
     </tbody>
