@@ -5,8 +5,8 @@
 {> import gleam/int
 {> import tmbgodt/album.{type Album}
 
-    <tr hx-target="this" hx-swap="outerHTML" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-    <form hx-put="/admin/song/{{int.to_string(song_edit.song.id)}}/edit" >
+    <tr id="song-{{int.to_string(song_edit.song.id)}}" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+    <form hx-target="#song-{{int.to_string(song_edit.song.id)}}" hx-swap="outerHTML" hx-put="/admin/song/{{int.to_string(song_edit.song.id)}}/edit" >
         <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{day.to_day_string(song_edit.song.day)}}</th>
         <td class="px-6 py-4"><input type="text" name="song" value="{{song_edit.song.name}}"></td>
         <td class="px-6 py-4">
