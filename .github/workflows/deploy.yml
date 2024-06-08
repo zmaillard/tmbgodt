@@ -2,7 +2,7 @@ name: Deploy TMBG Song Of The Day
 on:
   push:
     paths-ignore:
-      - 'README.md'
+      - "README.md"
     branches:
       - main
 jobs:
@@ -12,17 +12,17 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          fetch-depth: '0'
+          fetch-depth: "0"
           submodules: true
 
       - uses: erlef/setup-beam@v1
         with:
-          otp-version: '24'
-          gleam-version: '1.0.0'
+          otp-version: "24"
+          gleam-version: "1.2.0"
 
       - uses: actions/setup-node@v3
         with:
-          node-version: '^v20.11.0'
+          node-version: "^v20.11.0"
 
       - uses: moonrepo/setup-rust@v1
 

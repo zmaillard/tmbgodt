@@ -238,7 +238,7 @@ fn update_song(req: Request, ctx: Context, song_id: String) -> Response {
   |> wisp.html_response(200)
 }
 
-fn get_song(_req: Request, ctx: Context, song_id: String) -> Response {
+fn get_song(req: Request, ctx: Context, song_id: String) -> Response {
   use <- web.authentication_middleware(req)
   let assert Ok(song_id_int) = int.parse(song_id)
   let song = song.song_by_id(ctx.db, song_id_int)
@@ -249,7 +249,7 @@ fn get_song(_req: Request, ctx: Context, song_id: String) -> Response {
   |> wisp.html_response(200)
 }
 
-fn get_song_edit(_req: Request, ctx: Context, song_id: String) -> Response {
+fn get_song_edit(req: Request, ctx: Context, song_id: String) -> Response {
   use <- web.authentication_middleware(req)
   let assert Ok(song_id_int) = int.parse(song_id)
   let albums = album.all_albums(ctx.db)
