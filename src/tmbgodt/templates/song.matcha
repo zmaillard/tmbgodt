@@ -1,10 +1,9 @@
 {> with songs as Songs
 
-{> import gleam/int
+{> import tmbgodt/models/songrow.{SongRow}
 {> import tmbgodt/song.{type Song}
 {> import tmbgodt/models/songs.{type Songs}
-{> import tmbgodt/day
-
+{> import tmbgodt/templates/songrow as songrow_template
 
 
 <div class="relative overflow-x-auto">
@@ -22,18 +21,7 @@
     </thead>
     <tbody hx-target="closest tr" hx-swap="outerHTML">
     {% for song as Song in songs.songs %}
-     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{day.to_day_string(song.day)}}</th>
-        <td class="px-6 py-4">{{song.name}}</td>
-        <td class="px-6 py-4">{{song.album_name}}</td>
-        <td class="px-6 py-4">{{int.to_string(song.year)}}</td>
-        {% if songs.is_authenticated %}
-          <td scope="col" class="px-6 py-3">
-            <button
-                hx-get="/admin/song/{{int.to_string(song.id)}}/edit">Edit</button>
-          </td>
-        {% endif %}
-    </tr>
+    {[ songrow_template.render_builder(SongRow(song, songs.is_authenticated)) ]}
     {% endfor %}
     </tbody>
 </table>

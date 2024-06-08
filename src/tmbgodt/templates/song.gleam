@@ -3,10 +3,10 @@
 import gleam/list
 import gleam/string_builder.{type StringBuilder}
 
-import gleam/int
-import tmbgodt/day
+import tmbgodt/models/songrow.{SongRow}
 import tmbgodt/models/songs.{type Songs}
 import tmbgodt/song.{type Song}
+import tmbgodt/templates/songrow as songrow_template
 
 pub fn render_builder(songs songs: Songs) -> StringBuilder {
   let builder = string_builder.from_string("")
@@ -20,7 +20,6 @@ pub fn render_builder(songs songs: Songs) -> StringBuilder {
     string_builder.append(
       builder,
       "
-
 
 <div class=\"relative overflow-x-auto\">
     <table class=\"w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400\">
@@ -63,67 +62,17 @@ pub fn render_builder(songs songs: Songs) -> StringBuilder {
         string_builder.append(
           builder,
           "
-     <tr class=\"bg-white border-b dark:bg-gray-800 dark:border-gray-700\">
-        <th scope=\"row\" class=\"px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white\">",
+    ",
         )
-      let builder = string_builder.append(builder, day.to_day_string(song.day))
       let builder =
-        string_builder.append(
+        string_builder.append_builder(
           builder,
-          "</th>
-        <td class=\"px-6 py-4\">",
+          songrow_template.render_builder(SongRow(song, songs.is_authenticated)),
         )
-      let builder = string_builder.append(builder, song.name)
-      let builder =
-        string_builder.append(
-          builder,
-          "</td>
-        <td class=\"px-6 py-4\">",
-        )
-      let builder = string_builder.append(builder, song.album_name)
-      let builder =
-        string_builder.append(
-          builder,
-          "</td>
-        <td class=\"px-6 py-4\">",
-        )
-      let builder = string_builder.append(builder, int.to_string(song.year))
-      let builder =
-        string_builder.append(
-          builder,
-          "</td>
-        ",
-        )
-      let builder = case songs.is_authenticated {
-        True -> {
-          let builder =
-            string_builder.append(
-              builder,
-              "
-          <td scope=\"col\" class=\"px-6 py-3\">
-            <button
-                hx-get=\"/admin/song/",
-            )
-          let builder = string_builder.append(builder, int.to_string(song.id))
-          let builder =
-            string_builder.append(
-              builder,
-              "/edit\">Edit</button>
-          </td>
-        ",
-            )
-
-          builder
-        }
-        False -> {
-          builder
-        }
-      }
       let builder =
         string_builder.append(
           builder,
           "
-    </tr>
     ",
         )
 
