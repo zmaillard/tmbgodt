@@ -1,7 +1,7 @@
 default:
   @just --list
 
-build: template
+build: matcha template
   gleam build
 
 run: template tailwind
