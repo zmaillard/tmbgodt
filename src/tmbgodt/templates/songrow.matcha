@@ -1,0 +1,19 @@
+{> with song_row as SongRow
+
+{> import gleam/int
+{> import tmbgodt/song.{type Song}
+{> import tmbgodt/models/songrow.{type SongRow}
+{> import tmbgodt/day
+
+<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{day.to_day_string(song_row.song.day)}}</th>
+    <td class="px-6 py-4">{{song_row.song.name}}</td>
+    <td class="px-6 py-4">{{song_row.song.album_name}}</td>
+    <td class="px-6 py-4">{{int.to_string(song_row.song.year)}}</td>
+    {% if song_row.is_authenticated %}
+        <td scope="col" class="px-6 py-3">
+            <button
+                hx-get="/admin/song/{{int.to_string(song_row.song.id)}}/edit">Edit</button>
+        </td>
+    {% endif %}
+</tr>

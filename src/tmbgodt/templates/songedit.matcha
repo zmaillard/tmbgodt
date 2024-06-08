@@ -1,0 +1,28 @@
+{> with song_edit as SongEdit
+
+{> import tmbgodt/models/songedit.{type SongEdit}
+{> import tmbgodt/day
+{> import gleam/int
+{> import tmbgodt/album.{type Album}
+
+    <tr hx-trigger="cancel" hx-get="/admin/song/{{int.to_string(song_edit.song.id)}}" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{day.to_day_string(song_edit.song.day)}}</th>
+        <td class="px-6 py-4"><input type="text" name="song" value="{{song_edit.song.name}}"></td>
+        <td class="px-6 py-4">
+        <select id="album" name="album" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+          {% for album as Album in song_edit.albums %}
+
+          {% if album.name == song_edit.song.album_name %}
+          <option selected value={{int.to_string(album.id)}}>{{album.name}}</option>
+            {% else %}
+          <option value={{int.to_string(album.id)}}>{{album.name}}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+        </td>
+        <td class="px-6 py-4">{{int.to_string(song_edit.song.year)}}</td>
+        <td scope="col" class="px-6 py-3">
+            <button hx-put="/admin/song/{{int.to_string(song_edit.song.id)}}/edit" hx-include="closest tr" type="submit">Save</button>
+            <button hx-get="/admin/song/{{int.to_string(song_edit.song.id)}}">Cancel</button>
+        </td>
+    </tr>
