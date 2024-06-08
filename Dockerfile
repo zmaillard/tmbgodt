@@ -10,21 +10,13 @@ RUN apk add curl \
 COPY . /build/
 
 RUN cd /build \
-    && apk add fuse3 ca-certificates sqlite gcc build-base \
     && gleam export erlang-shipment \
     && mv build/erlang-shipment /app \
     && rm -r /build \
-    && apk del gcc build-base
-
-# Add database migrations
-#COPY ./db /app/db
-
-
-#COPY litefs.yml /etc/litefs.yml
+    && apk del curl
 
 # Run the application
 WORKDIR /app
-#ENTRYPOINT litefs mount
 
 ENTRYPOINT ["/app/entrypoint.sh"]
 CMD ["run"]

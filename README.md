@@ -6,7 +6,7 @@ An application that is used to learn Gleam.  Based off of the https://github.com
 ## Other Technologies Used
 - [Tailwind](https://tailwindcss.com)
 - [Matcha Templates](https://github.com/michaeljones/matcha)
-- [htmx](HTTPS://HTMX.ORG)
+- [htmx](https://htmx.org)
 
 ## Infrastructure
 - [FlyIO](https://fly.io)
