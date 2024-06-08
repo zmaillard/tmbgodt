@@ -5,10 +5,10 @@ An application that is used to learn Gleam.  Based off of the https://github.com
 
 
 ## Infrastructure
-- FlyIO
-- LiteFS / Sqlite Database
+- [FlyIO](https://fly.io)
+- PostgreSQL (Hosted using [Neon Serverless](https://neon.tech))
 - GitHub Actions For Deployment
-- Auth0 For Identity Management
+- [Auth0](https://auth0.com) For Identity Management
 
 ## Enviornment Variables (Defined As Secrets)
 - AUTH0_CALLBACK - Url to redirect after login
@@ -16,6 +16,7 @@ An application that is used to learn Gleam.  Based off of the https://github.com
 - AUTH0_DOMAIN - Url for Auth0 Tenant
 - SECRET_KEY - Secret key used by Wisp
 - USER_ID - User id used for authentication
-
-## Config Fly.IO
-https://fly.io/docs/litefs/speedrun/
+- POSTGRES_USER - Database user
+- POSTGRES_HOST - Database host
+- POSTGRES_PASS - Database password
+- POSTGRES_DB - Database name
