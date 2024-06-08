@@ -19,7 +19,7 @@ pub fn render_builder(song_row song_row: SongRow) -> StringBuilder {
     string_builder.append(
       builder,
       "
-<tr hx-target=\"this\" hx-swap=\"outerHTML\" class=\"bg-white border-b dark:bg-gray-800 dark:border-gray-700\">
+<tr class=\"bg-white border-b dark:bg-gray-800 dark:border-gray-700\">
     <th scope=\"row\" class=\"px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white\">",
     )
   let builder =
@@ -58,14 +58,17 @@ pub fn render_builder(song_row song_row: SongRow) -> StringBuilder {
         string_builder.append(
           builder,
           "
-        <td scope=\"col\" class=\"px-6 py-3\"><button hx-get=\"/admin/song/",
+        <td scope=\"col\" class=\"px-6 py-3\">
+            <button
+                hx-get=\"/admin/song/",
         )
       let builder =
         string_builder.append(builder, int.to_string(song_row.song.id))
       let builder =
         string_builder.append(
           builder,
-          "/edit\">Edit</button></td>
+          "/edit\">Edit</button>
+        </td>
     ",
         )
 

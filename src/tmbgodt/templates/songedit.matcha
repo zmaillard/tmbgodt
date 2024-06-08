@@ -5,8 +5,7 @@
 {> import gleam/int
 {> import tmbgodt/album.{type Album}
 
-    <tr id="song-{{int.to_string(song_edit.song.id)}}" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-    <form hx-target="#song-{{int.to_string(song_edit.song.id)}}" hx-swap="outerHTML" hx-put="/admin/song/{{int.to_string(song_edit.song.id)}}/edit" >
+    <tr hx-trigger="cancel" hx-get="/admin/song/{{int.to_string(song_edit.song.id)}}" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
         <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{day.to_day_string(song_edit.song.day)}}</th>
         <td class="px-6 py-4"><input type="text" name="song" value="{{song_edit.song.name}}"></td>
         <td class="px-6 py-4">
@@ -23,8 +22,7 @@
         </td>
         <td class="px-6 py-4">{{int.to_string(song_edit.song.year)}}</td>
         <td scope="col" class="px-6 py-3">
-        <button type="submit">Save</button>
-        <button hx-get="/admin/song/{{int.to_string(song_edit.song.id)}}">Cancel</button>
+            <button hx-put="/admin/song/{{int.to_string(song_edit.song.id)}}/edit" hx-include="closest tr" type="submit">Save</button>
+            <button hx-get="/admin/song/{{int.to_string(song_edit.song.id)}}">Cancel</button>
         </td>
-</form>
     </tr>

@@ -20,14 +20,13 @@ pub fn render_builder(song_edit song_edit: SongEdit) -> StringBuilder {
     string_builder.append(
       builder,
       "
-    <tr hx-target=\"this\" hx-swap=\"outerHTML\" class=\"bg-white border-b dark:bg-gray-800 dark:border-gray-700\">
-    <form hx-put=\"/admin/song/",
+    <tr hx-trigger=\"cancel\" hx-get=\"/admin/song/",
     )
   let builder = string_builder.append(builder, int.to_string(song_edit.song.id))
   let builder =
     string_builder.append(
       builder,
-      "/edit\" >
+      "\" class=\"bg-white border-b dark:bg-gray-800 dark:border-gray-700\">
         <th scope=\"row\" class=\"px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white\">",
     )
   let builder =
@@ -120,8 +119,14 @@ pub fn render_builder(song_edit song_edit: SongEdit) -> StringBuilder {
       builder,
       "</td>
         <td scope=\"col\" class=\"px-6 py-3\">
-        <button class=\"btn\">Save</button>
-        <button hx-get=\"/admin/song/",
+            <button hx-put=\"/admin/song/",
+    )
+  let builder = string_builder.append(builder, int.to_string(song_edit.song.id))
+  let builder =
+    string_builder.append(
+      builder,
+      "/edit\" hx-include=\"closest tr\" type=\"submit\">Save</button>
+            <button hx-get=\"/admin/song/",
     )
   let builder = string_builder.append(builder, int.to_string(song_edit.song.id))
   let builder =
@@ -129,7 +134,6 @@ pub fn render_builder(song_edit song_edit: SongEdit) -> StringBuilder {
       builder,
       "\">Cancel</button>
         </td>
-</form>
     </tr>
 ",
     )
