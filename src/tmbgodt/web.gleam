@@ -9,7 +9,12 @@ import wisp.{type Response}
 const cookie_name = "tmbgid"
 
 pub type Context {
-  Context(db: pgo.Connection, auth: Auth, static_directory: String)
+  Context(
+    db: pgo.Connection,
+    auth: Auth,
+    static_directory: String,
+    version_number: String,
+  )
 }
 
 pub fn is_authenticated(req: wisp.Request) -> Bool {
