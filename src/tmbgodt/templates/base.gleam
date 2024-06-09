@@ -44,14 +44,11 @@ pub fn render_builder(content content: Version) -> StringBuilder {
             <a href=\"/song\" class=\"hover:underline me-4 md:me-6\">Previous Songs</a>
         </li>
         <li>
-            <a href=\"http://github.com/zmaillard/tmbgodt/releases/tag/v",
+            <a href=\"http://github.com/zmaillard/tmbgodt/releases/tag/",
     )
   let builder = string_builder.append(builder, content.version_number)
   let builder =
-    string_builder.append(
-      builder,
-      "\" class=\"hover:underline me-4 md:me-6\">v",
-    )
+    string_builder.append(builder, "\" class=\"hover:underline me-4 md:me-6\">")
   let builder = string_builder.append(builder, content.version_number)
   let builder =
     string_builder.append(
