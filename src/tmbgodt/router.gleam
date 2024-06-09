@@ -14,6 +14,7 @@ import tmbgodt/models/home.{Home}
 import tmbgodt/models/songedit.{SongEdit}
 import tmbgodt/models/songrow.{SongRow}
 import tmbgodt/models/songs.{Songs}
+import tmbgodt/models/version.{append_content}
 import tmbgodt/song
 import tmbgodt/templates/album as album_template
 import tmbgodt/templates/albums as albums_template
@@ -201,6 +202,7 @@ fn get_album(_: Request, ctx: Context) -> Response {
   let album_types = album.all_album_types(ctx.db)
 
   albums_template.render_builder(AlbumEdit(albums, album_types))
+  |> append_content(ctx.version_number)
   |> base_template.render_builder
   |> wisp.html_response(200)
 }
@@ -268,6 +270,7 @@ fn get_all_songs(_: Request, ctx: Context, is_auth: Bool) -> Response {
   let home = Home(Songs(songs, is_auth), albums, is_auth)
 
   songs_template.render_builder(home)
+  |> append_content(ctx.version_number)
   |> base_template.render_builder
   |> wisp.html_response(200)
 }
@@ -278,6 +281,7 @@ fn home(_: Request, ctx: Context) -> Response {
     |> list.last
 
   home_template.render_builder(song)
+  |> append_content(ctx.version_number)
   |> base_template.render_builder
   |> wisp.html_response(200)
 }

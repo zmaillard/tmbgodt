@@ -1,4 +1,7 @@
-{> with content as StringBuilder
+{> with content as Version
+{> import tmbgodt/models/version.{type Version}
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -10,7 +13,7 @@
     <script src="https://unpkg.com/htmx.org@1.9.11"></script>
   </head>
   <body class="bg-white dark:bg-black">
-    {[ content ]}
+    {[ content.content ]}
       <footer class="p-4 bg-white md:p-8 lg:p-10 dark:bg-black mt-4">
         <div class="mx-auto max-w-screen-xl text-center">
 
@@ -26,7 +29,7 @@
             <a href="/song" class="hover:underline me-4 md:me-6">Previous Songs</a>
         </li>
         <li>
-            <a href="http://github.com/zmaillard/tmbgodt" class="hover:underline me-4 md:me-6">Source Code</a>
+            <a href="http://github.com/zmaillard/tmbgodt/releases/tag/v{{content.version_number}}" class="hover:underline me-4 md:me-6">v{{content.version_number}}</a>
         </li>
     </ul>
     </div>

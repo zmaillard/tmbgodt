@@ -2,12 +2,16 @@
 
 import gleam/string_builder.{type StringBuilder}
 
-pub fn render_builder(content content: StringBuilder) -> StringBuilder {
+import tmbgodt/models/version.{type Version}
+
+pub fn render_builder(content content: Version) -> StringBuilder {
   let builder = string_builder.from_string("")
   let builder =
     string_builder.append(
       builder,
       "
+
+
 <!DOCTYPE html>
 <html lang=\"en\">
   <head>
@@ -20,7 +24,7 @@ pub fn render_builder(content content: StringBuilder) -> StringBuilder {
   <body class=\"bg-white dark:bg-black\">
     ",
     )
-  let builder = string_builder.append_builder(builder, content)
+  let builder = string_builder.append_builder(builder, content.content)
   let builder =
     string_builder.append(
       builder,
@@ -40,7 +44,19 @@ pub fn render_builder(content content: StringBuilder) -> StringBuilder {
             <a href=\"/song\" class=\"hover:underline me-4 md:me-6\">Previous Songs</a>
         </li>
         <li>
-            <a href=\"http://github.com/zmaillard/tmbgodt\" class=\"hover:underline me-4 md:me-6\">Source Code</a>
+            <a href=\"http://github.com/zmaillard/tmbgodt/releases/tag/v",
+    )
+  let builder = string_builder.append(builder, content.version_number)
+  let builder =
+    string_builder.append(
+      builder,
+      "\" class=\"hover:underline me-4 md:me-6\">v",
+    )
+  let builder = string_builder.append(builder, content.version_number)
+  let builder =
+    string_builder.append(
+      builder,
+      "</a>
         </li>
     </ul>
     </div>
@@ -53,6 +69,6 @@ pub fn render_builder(content content: StringBuilder) -> StringBuilder {
   builder
 }
 
-pub fn render(content content: StringBuilder) -> String {
+pub fn render(content content: Version) -> String {
   string_builder.to_string(render_builder(content: content))
 }

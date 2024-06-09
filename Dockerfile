@@ -10,11 +10,11 @@ RUN apk add curl \
 COPY . /build/
 
 RUN cd /build \
-    && apk add fuse3 ca-certificates sqlite gcc build-base \
+    && apk add ca-certificates gcc build-base \
     && gleam export erlang-shipment \
     && mv build/erlang-shipment /app \
     && rm -r /build \
-    && apk del gcc build-base
+    && apk del gcc build-base curl
 
 # Add database migrations
 #COPY ./db /app/db

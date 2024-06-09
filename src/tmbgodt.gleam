@@ -15,6 +15,7 @@ pub fn main() {
   let port = load_port()
   let secret_key = load_secret_key()
 
+  let version_number = os.get_env("APP_VERSION") |> result.unwrap("1.0.0")
   let assert Ok(domain) = os.get_env("AUTH0_DOMAIN")
   let assert Ok(client_id) = os.get_env("AUTH0_CLIENTID")
   let assert Ok(callback) = os.get_env("AUTH0_CALLBACK")
@@ -23,7 +24,13 @@ pub fn main() {
 
   let handle_request = fn(req) {
     use db <- database.with_connection()
-    let ctx = Context(db: db, auth: auth, static_directory: static_directory())
+    let ctx =
+      Context(
+        db: db,
+        auth: auth,
+        static_directory: static_directory(),
+        version_number: version_number,
+      )
     router.handle_request(req, ctx)
   }
 
