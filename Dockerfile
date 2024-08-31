@@ -1,4 +1,4 @@
-FROM erlang:25.3-alpine
+FROM erlang:26.2.5.2-alpine
 
 # Install Gleam
 RUN apk add curl \
