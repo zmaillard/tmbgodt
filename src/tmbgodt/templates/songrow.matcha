@@ -1,7 +1,6 @@
 {> with song_row as SongRow
 
 {> import gleam/int
-{> import tmbgodt/song.{type Song}
 {> import tmbgodt/models/songrow.{type SongRow}
 {> import tmbgodt/day
 

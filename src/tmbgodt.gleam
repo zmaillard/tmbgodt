@@ -8,6 +8,7 @@ import tmbgodt/models/auth
 import tmbgodt/router
 import tmbgodt/web.{Context}
 import wisp
+import wisp/wisp_mist
 
 pub fn main() {
   wisp.configure_logger()
@@ -22,20 +23,19 @@ pub fn main() {
 
   let auth = auth.Auth(domain, client_id, callback)
 
-  let handle_request = fn(req) {
-    use db <- database.with_connection()
-    let ctx =
-      Context(
-        db: db,
-        auth: auth,
-        static_directory: static_directory(),
-        version_number: version_number,
-      )
-    router.handle_request(req, ctx)
-  }
+  use db <- database.with_connection()
+  let ctx =
+    Context(
+      db: db,
+      auth: auth,
+      static_directory: static_directory(),
+      version_number: version_number,
+    )
+  let handler = router.handle_request(_, ctx)
 
   let assert Ok(_) =
-    wisp.mist_handler(handle_request, secret_key)
+    handler
+    |> wisp_mist.handler(secret_key)
     |> mist.new
     |> mist.port(port)
     |> mist.start_http
