@@ -5,7 +5,6 @@ import gleam/string_builder.{type StringBuilder}
 import gleam/int
 import tmbgodt/day
 import tmbgodt/models/songrow.{type SongRow}
-import tmbgodt/song.{type Song}
 
 pub fn render_builder(song_row song_row: SongRow) -> StringBuilder {
   let builder = string_builder.from_string("")

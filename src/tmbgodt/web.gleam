@@ -39,10 +39,10 @@ pub fn is_authenticated(req: wisp.Request) -> Bool {
 
 pub fn authentication_middleware(
   req: wisp.Request,
-  handle_request: fn() -> wisp.Response,
+  handle_request: fn(wisp.Request) -> wisp.Response,
 ) -> wisp.Response {
   case is_authenticated(req) {
-    True -> handle_request()
+    True -> handle_request(req)
     False -> wisp.redirect("/login")
   }
 }

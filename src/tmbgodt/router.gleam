@@ -31,7 +31,7 @@ const cookie_name = "tmbgid"
 
 const state_cookie = "state"
 
-pub fn handle_request(req: Request, ctx: Context) {
+pub fn handle_request(req: Request, ctx: Context) -> Response {
   let req = wisp.method_override(req)
   use <- wisp.log_request(req)
   use <- wisp.rescue_crashes
@@ -53,7 +53,7 @@ pub fn handle_request(req: Request, ctx: Context) {
 }
 
 fn admin(req: Request, ctx: Context) -> Response {
-  use <- web.authentication_middleware(req)
+  use req <- web.authentication_middleware(req)
 
   case wisp.path_segments(req) {
     [_, "logout"] -> logout(req, ctx)
@@ -123,7 +123,7 @@ fn login(req: Request, ctx: Context) -> Response {
 }
 
 fn create_song(request: Request, ctx: Context) -> Response {
-  use <- web.authentication_middleware(request)
+  use _req <- web.authentication_middleware(request)
   use params <- wisp.require_form(request)
 
   let res = {
@@ -134,14 +134,7 @@ fn create_song(request: Request, ctx: Context) -> Response {
       |> result.replace_error(error.InvalidAlbum),
     )
 
-    use apple_music_link <- result.try(web.key_find(params.values, "applemusic"))
-    let songwhip_url = song.songwhip_url(apple_music_link)
-    use id <- result.try(song.insert_song(
-      song_name,
-      album_id,
-      songwhip_url,
-      ctx.db,
-    ))
+    use id <- result.try(song.insert_song(song_name, album_id, ctx.db))
 
     Ok(id)
   }
@@ -163,7 +156,7 @@ fn album(req: Request, ctx: Context) -> Response {
 }
 
 fn create_album(req: Request, ctx: Context) -> Response {
-  use <- web.authentication_middleware(req)
+  use req <- web.authentication_middleware(req)
   use params <- wisp.require_form(req)
 
   let res = {
@@ -208,7 +201,7 @@ fn get_album(_: Request, ctx: Context) -> Response {
 }
 
 fn update_song(req: Request, ctx: Context, song_id: String) -> Response {
-  use <- web.authentication_middleware(req)
+  use req <- web.authentication_middleware(req)
   use params <- wisp.require_form(req)
   let assert Ok(song_id_int) = int.parse(song_id)
 
@@ -241,7 +234,7 @@ fn update_song(req: Request, ctx: Context, song_id: String) -> Response {
 }
 
 fn get_song(req: Request, ctx: Context, song_id: String) -> Response {
-  use <- web.authentication_middleware(req)
+  use _req <- web.authentication_middleware(req)
   let assert Ok(song_id_int) = int.parse(song_id)
   let song = song.song_by_id(ctx.db, song_id_int)
 
@@ -252,7 +245,7 @@ fn get_song(req: Request, ctx: Context, song_id: String) -> Response {
 }
 
 fn get_song_edit(req: Request, ctx: Context, song_id: String) -> Response {
-  use <- web.authentication_middleware(req)
+  use _req <- web.authentication_middleware(req)
   let assert Ok(song_id_int) = int.parse(song_id)
   let albums = album.all_albums(ctx.db)
   let song = song.song_by_id(ctx.db, song_id_int)

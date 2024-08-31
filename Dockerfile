@@ -1,9 +1,9 @@
-FROM erlang:25.3-alpine
+FROM erlang:26.2.5.2-alpine
 
 # Install Gleam
 RUN apk add curl \
-    && curl -LO https://github.com/gleam-lang/gleam/releases/download/v1.2.1/gleam-v1.2.1-x86_64-unknown-linux-musl.tar.gz \
-    && tar -xzf gleam-v1.2.1-x86_64-unknown-linux-musl.tar.gz \
+    && curl -LO https://github.com/gleam-lang/gleam/releases/download/v1.4.1/gleam-v1.4.1-x86_64-unknown-linux-musl.tar.gz \
+    && tar -xzf gleam-v1.4.1-x86_64-unknown-linux-musl.tar.gz \
     && mv gleam /usr/local/bin/gleam
 
 # Add project code

@@ -10,21 +10,22 @@ version = "1.0.0"
 # links = [{ title = "Website", href = "https://gleam.run" }]
 #
 # For a full reference of all the available options, you can have a look at
-# https://gleam.run/writing-gleam/gleam-toml/. 
+# https://gleam.run/writing-gleam/gleam-toml/.
 
 [dependencies]
-gleam_stdlib = "~> 0.34 or ~> 1.0"
-mist = "~> 0.13"
-wisp = "~> 0.12.0"
+gleam_stdlib = ">= 0.29.0 and < 2.0.0"
+mist =  ">= 1.2.0 and < 3.0.0"
+wisp = "~> 1.1.0"
 gleam_erlang = "~> 0.25"
-sqlight = "~> 0.9"
 gleam_http = "~> 3.6"
 birl = "~> 1.6"
-dot_env = "~> 0.3"
 prng = "~> 3.0"
 gleam_hackney = "~> 1.2"
 gleam_json = "~> 1.0"
-gleam_pgo = ">= 0.9.0 and < 1.0.0"
+gleam_pgo = ">= 0.14.0 and < 1.0.0"
 
 [dev-dependencies]
 gleeunit = "~> 1.0"
+
+[erlang]
+extra_applications = ["ssl"]

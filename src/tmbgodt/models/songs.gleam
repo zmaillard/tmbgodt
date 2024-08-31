@@ -1,4 +1,3 @@
-import tmbgodt/album.{type Album}
 import tmbgodt/song.{type Song}
 
 pub type Songs {
